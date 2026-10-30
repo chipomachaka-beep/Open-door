@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Open Door – prison ministry hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C1017;--panel:#141A24;--raised:#1B2230;--line:#262F3F;--line2:#323C4E;
+  --text:#E9EDF3;--muted:#8D97A9;--faint:#5E6779;
+  --gold:#F0B94A;--gold-dim:#3A2F1A;--violet:#8794FF;--cyan:#5FC8E4;--green:#3DD68C;--green-dim:#163326;--red:#FF5C64;--red-dim:#3A1A1E;--pink:#F38BA5;
+  --head:"Sora","Segoe UI",system-ui,sans-serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:dark;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
+:root[data-theme="dark"]{color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--head);margin:0;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.hide{display:none!important}
+.muted{color:var(--muted)}
+.num{font-family:var(--head);font-variant-numeric:tabular-nums}
+
+/* ---------- Login ---------- */
+#login{min-height:100%;display:grid;grid-template-columns:1.1fr 1fr}
+@media(max-width:900px){#login{grid-template-columns:1fr}.door-side{min-height:520px;padding:2rem 1.5rem}}
+.door-side{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:3rem;background:radial-gradient(120% 90% at 50% 100%,#1A1408 0%,var(--bg) 60%)}
+.door{position:absolute;left:50%;top:6%;transform:translateX(-50%);width:min(240px,40vw);aspect-ratio:3/4.6}
+.door svg{width:100%;height:100%;overflow:visible}
+.door .glow{transform-origin:50% 100%;animation:open 2.4s cubic-bezier(.16,1,.3,1) .2s both}
+.door .beam{opacity:.0;animation:beam 2.6s ease .9s both}
+@keyframes open{from{transform:scaleX(.02);opacity:.2}to{transform:scaleX(1);opacity:1}}
+@keyframes beam{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.door .glow,.door .beam{animation:none;opacity:1}}
+.door-copy{position:relative;z-index:1;max-width:560px}
+.door-copy h1{font-size:clamp(2rem,3.2vw,3rem);line-height:1.08;letter-spacing:-.03em;text-wrap:balance}
+.door-copy p{color:var(--muted);margin-top:.75rem;font-size:1.05rem}
+.login-side{display:flex;align-items:center;justify-content:center;padding:2.5rem 1.5rem;background:var(--panel);border-left:1px solid var(--line)}
+.login-box{width:100%;max-width:420px}
+.wordmark{display:flex;align-items:center;gap:.6rem;font-family:var(--head);font-weight:700;font-size:1.25rem;margin-bottom:2.2rem}
+.login-box h2{font-size:1.6rem}
+.login-box>p{color:var(--muted);margin:.35rem 0 1.6rem}
+.roles{display:grid;gap:.6rem;margin-bottom:1.4rem}
+.roleopt{position:relative}
+.roleopt input{position:absolute;opacity:0}
+.roleopt label{display:flex;gap:.85rem;align-items:center;padding:.85rem 1rem;border:1px solid var(--line2);border-radius:12px;cursor:pointer;background:var(--raised);transition:border-color .15s,background .15s}
+.roleopt input:checked+label{border-color:var(--gold);background:var(--gold-dim)}
+.roleopt input:focus-visible+label{outline:2px solid var(--gold);outline-offset:2px}
+.roleopt .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--bg);flex:none;color:var(--gold)}
+.roleopt b{display:block;font-weight:600}
+.roleopt small{color:var(--muted)}
+.field{margin-bottom:.9rem}
+.field label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:.35rem;font-weight:500}
+.input,select.input,textarea.input{width:100%;padding:.7rem .85rem;border-radius:10px;border:1px solid var(--line2);background:var(--bg);color:var(--text)}
+textarea.input{min-height:90px;resize:vertical}
+.demo-note{font-size:.82rem;color:var(--faint);margin-top:1rem;text-align:center}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border:1px solid var(--gold);background:var(--gold);color:#1A1306;padding:.62rem 1.1rem;border-radius:10px;font-weight:600;cursor:pointer;transition:filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn.full{width:100%;padding:.85rem}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line2)}
+.btn.ghost:hover{border-color:var(--muted)}
+.btn.sm{padding:.38rem .7rem;font-size:.85rem;border-radius:8px}
+.btn.danger{background:transparent;border-color:var(--red-dim);color:var(--red)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- Shell ---------- */
+#shell{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100%}
+.side{position:sticky;top:0;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:1.4rem 1rem;border-right:1px solid var(--line);background:var(--panel)}
+.side .wordmark{margin:0 .5rem 2rem;font-size:1.1rem}
+.nav{display:flex;flex-direction:column;gap:.2rem}
+.nav button{display:flex;align-items:center;gap:.75rem;padding:.65rem .75rem;border-radius:10px;border:0;background:none;color:var(--muted);cursor:pointer;text-align:left;font-weight:500}
+.nav button:hover{color:var(--text);background:var(--raised)}
+.nav button[aria-current="page"]{color:var(--text);background:var(--raised);box-shadow:inset 3px 0 0 var(--gold)}
+.nav .badge{margin-left:auto;background:var(--violet);color:#0C1017;font-size:.72rem;font-weight:700;border-radius:99px;padding:.05rem .45rem}
+.me{margin-top:auto;display:flex;align-items:center;gap:.65rem;padding:.75rem;border-radius:12px;background:var(--raised)}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.8rem;flex:none;color:#0C1017}
+.me{flex-wrap:wrap}.me div{min-width:0;flex:1}.meic{display:flex;gap:.2rem;width:100%;justify-content:flex-end;border-top:1px solid var(--line);padding-top:.4rem;margin-top:.1rem}
+.me b{display:block;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me small{color:var(--muted);font-size:.78rem}
+.iconbtn{border:0;background:none;color:var(--muted);cursor:pointer;padding:.35rem;border-radius:8px;display:grid;place-items:center}
+.iconbtn:hover{color:var(--text);background:var(--line)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;gap:1rem;padding:1rem 2rem;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top h1{font-size:1.25rem;margin-right:auto}
+.scope{display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.88rem}
+.scope select{max-width:62vw;padding:.5rem .7rem;border-radius:10px;border:1px solid var(--line2);background:var(--panel);color:var(--text)}
+#view{padding:1.75rem 2rem 4rem;max-width:1280px}
+@media(max-width:860px){
+  #shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;padding:.6rem;gap:.5rem;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .side .wordmark{display:none}.nav{flex-direction:row}.nav button span.lbl{display:none}.me{margin:0 0 0 auto;padding:.35rem .5rem}.me div{display:none}
+  .top{padding:.8rem 1rem;flex-wrap:wrap}#view{padding:1.25rem 1rem 4rem}
+}
+
+/* ---------- Panels & grids ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:1.35rem}
+.ph{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.ph h3{font-size:1.02rem}
+.ph small{color:var(--muted)}
+.grid{display:grid;gap:1.1rem}
+.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.kpi .big{font-size:1.8rem}.kpi svg.spark{display:none}}
+.two{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+@media(max-width:1000px){.two{grid-template-columns:1fr}}
+.kpi{position:relative;overflow:hidden}
+.kpi .lab{color:var(--muted);font-size:.86rem}
+.kpi .big{font-size:2.3rem;font-weight:700;line-height:1.1;margin:.3rem 0 .15rem}
+.kpi .sub{font-size:.82rem;color:var(--muted)}
+.kpi svg.spark{position:absolute;right:1.1rem;top:1.1rem;width:84px;height:32px}
+.mt{margin-top:1.1rem}
+.welcome{margin-bottom:1.4rem}
+.welcome h2{font-size:1.65rem;letter-spacing:-.02em}
+.welcome p{color:var(--muted);margin-top:.2rem}
+
+/* journey funnel */
+.journey{display:flex;flex-direction:column;gap:.55rem}
+.jrow{display:grid;grid-template-columns:150px 1fr 38px;align-items:center;gap:.8rem;background:none;border:0;padding:.15rem 0;cursor:pointer;text-align:left;color:inherit}
+.jrow .bar{height:30px;border-radius:8px;background:var(--raised);position:relative;overflow:hidden}
+.jrow .fill{position:absolute;inset:0 auto 0 0;border-radius:8px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+.jrow .n{font-family:var(--head);font-weight:700;text-align:right}
+.jrow:hover .bar{outline:1px solid var(--line2)}
+@media(max-width:520px){.jrow{grid-template-columns:110px 1fr 30px}.jrow span.l{font-size:.85rem}}
+
+/* donut */
+.donut-wrap{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap}
+.donut{position:relative;width:180px;height:180px;flex:none}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut .center{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut .center b{font-family:var(--head);font-size:2rem;line-height:1}
+.donut .center small{color:var(--muted);font-size:.8rem}
+.legend{display:flex;flex-direction:column;gap:.55rem;flex:1;min-width:160px}
+.legend div{display:flex;align-items:center;gap:.55rem;font-size:.9rem}
+.legend i{width:10px;height:10px;border-radius:3px;flex:none}
+.legend span{margin-left:auto;font-family:var(--head);font-weight:600}
+
+/* list rows */
+.vlist{display:flex;flex-direction:column}
+.vrow{display:flex;gap:.9rem;padding:.8rem 0;border-top:1px solid var(--line)}
+.vrow:first-child{border-top:0;padding-top:0}
+.vdate{width:48px;flex:none;text-align:center;background:var(--raised);border-radius:10px;padding:.35rem 0;line-height:1.1}
+.vdate b{display:block;font-family:var(--head);font-size:1.15rem}
+.vdate small{color:var(--muted);font-size:.72rem}
+.pill{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;font-weight:600;padding:.18rem .55rem;border-radius:99px;background:var(--raised);color:var(--muted);white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%}
+
+/* tables */
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:.8rem;padding:.6rem .75rem;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:.8rem .75rem;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--raised)}
+td.amt{font-family:var(--head);font-variant-numeric:tabular-nums;white-space:nowrap}
+.owing{color:var(--red);font-weight:700}
+.done{color:var(--green);font-weight:700}
+.status{display:inline-flex;align-items:center;gap:.35rem;font-size:.78rem;font-weight:700;padding:.22rem .6rem;border-radius:99px;white-space:nowrap}
+.status.red{background:var(--red-dim);color:var(--red)}
+.status.green{background:var(--green-dim);color:var(--green)}
+.status.amber{background:var(--gold-dim);color:var(--gold)}
+
+/* category cards */
+.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-bottom:1.1rem}
+@media(max-width:1100px){.cats{grid-template-columns:repeat(2,1fr)}}
+.cat{text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:1rem;cursor:pointer;color:inherit}
+.cat[aria-pressed="true"]{border-color:var(--c)}
+.cat .t{display:flex;align-items:center;gap:.5rem;font-weight:600;font-size:.92rem}
+.cat .t i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.cat .o{font-family:var(--head);font-size:1.6rem;font-weight:700;margin:.45rem 0 .1rem}
+.cat small{color:var(--muted);font-size:.8rem}
+.meter{height:6px;border-radius:99px;background:var(--raised);overflow:hidden;margin-top:.6rem}
+.meter b{display:block;height:100%;background:var(--c);border-radius:99px}
+.seg{display:inline-flex;background:var(--raised);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:none;color:var(--muted);padding:.4rem .8rem;border-radius:8px;cursor:pointer;font-weight:500;font-size:.88rem}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--text);box-shadow:0 1px 0 var(--line2)}
+
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:.6rem;margin-bottom:1.1rem}
+@media(max-width:1000px){.pipe{grid-template-columns:repeat(3,1fr)}}
+.stage{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:.9rem 1rem;cursor:pointer;color:inherit;overflow:hidden}
+.stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c);opacity:.7}
+.stage[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--panel))}
+.stage b{display:block;font-family:var(--head);font-size:1.9rem;line-height:1.1}
+.stage small{color:var(--muted);font-size:.8rem;display:block;margin-top:.2rem}
+.stage .step{font-size:.72rem;color:var(--faint)}
+
+/* drawer & modal */
+.scrim{position:fixed;inset:0;background:rgba(5,8,12,.6);z-index:40;display:none}
+.scrim.open{display:block}
+.drawer{visibility:hidden;position:fixed;top:0;right:0;bottom:0;width:min(580px,100%);background:var(--panel);border-left:1px solid var(--line);z-index:41;transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);overflow-y:auto;padding:calc(1.5rem + env(safe-area-inset-top,0px)) 1.5rem calc(1.5rem + env(safe-area-inset-bottom,0px))}
+.drawer.open{transform:none;visibility:visible}
+.modal{position:fixed;inset:0;z-index:42;display:none;place-items:center;padding:1rem}
+.modal.open{display:grid}
+.mbox{width:min(520px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:1.5rem;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.mbox h3{font-size:1.2rem;margin-bottom:1rem}
+.actions{display:flex;gap:.5rem;justify-content:flex-end;flex-wrap:wrap;margin-top:1.2rem}
+@media (prefers-reduced-motion:reduce){.drawer,.jrow .fill{transition:none}}
+.tl{list-style:none;margin:1rem 0 0;padding:0}
+.tl li{position:relative;padding:0 0 1rem 1.2rem;border-left:1px solid var(--line2);font-size:.9rem}
+.tl li::before{content:"";position:absolute;left:-5px;top:.35rem;width:9px;height:9px;border-radius:50%;background:var(--c,var(--violet))}
+.tl small{color:var(--muted);display:block}
+
+/* wizard */
+.steps{display:flex;gap:.5rem;margin-bottom:1.4rem;flex-wrap:wrap}
+.steps div{display:flex;align-items:center;gap:.5rem;color:var(--faint);font-size:.9rem;font-weight:500}
+.steps div b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line2);font-size:.8rem}
+.steps div.on{color:var(--text)}.steps div.on b{background:var(--gold);color:#1A1306;border-color:var(--gold)}
+.steps div.ok b{background:var(--green-dim);color:var(--green);border-color:var(--green-dim)}
+.steps hr{flex:0 0 28px;border:0;border-top:1px solid var(--line2);margin:0}
+.wiz{max-width:860px}
+.choice{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.6rem}
+.tile{text-align:left;border:1px solid var(--line2);background:var(--raised);border-radius:12px;padding:.85rem 1rem;cursor:pointer;color:inherit}
+.tile[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-dim)}
+.tile b{display:block;font-weight:600}
+.tile small{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0}
+.chip span{display:inline-block;padding:.38rem .8rem;border:1px solid var(--line2);border-radius:99px;font-size:.86rem;cursor:pointer;background:var(--raised)}
+.chip input:checked+span{background:var(--c,var(--gold));border-color:var(--c,var(--gold));color:#0C1017;font-weight:600}
+.chip input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
+.lbl2{font-size:.85rem;color:var(--muted);font-weight:500;margin:1.2rem 0 .5rem;display:block}
+.prow{border:1px solid var(--line2);border-radius:14px;padding:1.1rem;margin-bottom:.9rem;background:var(--bg)}
+.prow .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media(max-width:640px){.row2{grid-template-columns:1fr}}
+.needgroup{margin-top:.6rem}
+.needgroup small{display:block;color:var(--muted);font-size:.78rem;margin-bottom:.3rem}
+.navrow{display:flex;justify-content:space-between;margin-top:1.4rem}
+.review dl{display:grid;grid-template-columns:150px 1fr;gap:.55rem 1rem;margin:0}
+.review dt{color:var(--muted)}.review dd{margin:0}
+
+/* letters */
+.lgrid{display:grid;grid-template-columns:400px 1fr;gap:1.1rem;align-items:start}
+@media(max-width:1050px){.lgrid{grid-template-columns:1fr}}
+.ring{position:relative;width:300px;height:300px;margin:.5rem auto 1.2rem}
+.ring svg{width:100%;height:100%}
+.ring path{cursor:pointer;transition:stroke-width .2s,opacity .2s}
+.ring path:hover,.ring path.sel{stroke-width:40}
+.ring path.dim{opacity:.35}
+.ring .center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}
+.ring .center b{font-family:var(--head);font-size:2.6rem;line-height:1}
+.ring .center small{color:var(--muted)}
+.stagelist{display:flex;flex-direction:column;gap:.35rem}
+.stagelist button{display:flex;align-items:center;gap:.65rem;padding:.6rem .75rem;border-radius:10px;border:1px solid transparent;background:none;color:inherit;cursor:pointer;text-align:left}
+.stagelist button[aria-pressed="true"]{border-color:var(--line2);background:var(--raised)}
+.stagelist i{width:10px;height:10px;border-radius:50%;flex:none}
+.stagelist span{margin-left:auto;font-family:var(--head);font-weight:700}
+.stagelist small{color:var(--muted);font-size:.78rem}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.1rem}
+@media(max-width:640px){.team{grid-template-columns:repeat(2,1fr)}}
+.tm{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35rem;padding:.9rem .5rem;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.tm .av{width:44px;height:44px;font-size:.95rem}
+.tm b{font-size:.88rem}
+.tm small{color:var(--muted);font-size:.76rem}
+.lcard{border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;background:var(--bg);margin-bottom:.7rem}
+.lcard .top2{display:flex;justify-content:space-between;gap:.8rem;flex-wrap:wrap;align-items:center}
+.lcard p.body{margin-top:.6rem;color:var(--muted);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lcard .approval{margin-top:.7rem;padding:.65rem .8rem;border-radius:10px;background:var(--raised);font-size:.86rem}
+.lcard .approval b{color:var(--cyan)}
+.ticks{display:flex;gap:1rem;align-items:center;margin-top:.7rem;flex-wrap:wrap}
+.tick{display:flex;align-items:center;gap:.45rem;font-size:.9rem;cursor:pointer}
+.tick input{width:18px;height:18px;accent-color:var(--gold)}
+.counts{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.counts div{flex:1;min-width:110px;padding:.8rem 1rem;border-radius:12px;background:var(--raised)}
+.counts b{display:block;font-family:var(--head);font-size:1.5rem}
+.counts small{color:var(--muted);font-size:.8rem}
+.empty{padding:2rem;text-align:center;color:var(--muted);border:1px dashed var(--line2);border-radius:14px}
+.lock{font-size:.82rem;color:var(--faint);margin-top:.5rem}
+
+/* follow-ups */
+.att{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem;margin-bottom:1.1rem}
+@media(max-width:1100px){.att{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.attc{text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:1.1rem 1.2rem;cursor:pointer;color:inherit;position:relative;overflow:hidden}
+.attc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.attc:hover{border-color:var(--line2)}
+.attc .t{font-size:.86rem;color:var(--muted)}
+.attc .n{font-family:var(--head);font-weight:700;font-size:2rem;line-height:1.1;margin:.25rem 0}
+.attc .x{font-size:.84rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem}
+@media(max-width:1000px){.fgrid{grid-template-columns:1fr}}
+.frow{display:flex;align-items:center;gap:.9rem;padding:.75rem 0;border-top:1px solid var(--line)}
+.frow:first-child{border-top:0}
+.age{width:58px;flex:none;text-align:center;border-radius:12px;padding:.4rem 0;line-height:1.05;background:var(--raised)}
+.age b{display:block;font-family:var(--head);font-size:1.3rem}
+.age small{font-size:.68rem;color:var(--muted)}
+.age.red{background:var(--red-dim)}.age.red b{color:var(--red)}
+.age.amber{background:var(--gold-dim)}.age.amber b{color:var(--gold)}
+.age.green{background:var(--green-dim)}.age.green b{color:var(--green)}
+.frow .mid{flex:1;min-width:0}
+.frow .mid b{display:block}
+.frow .mid small{color:var(--muted);font-size:.84rem;display:block}
+.frow .act{display:flex;gap:.4rem;flex:none}
+@media(max-width:560px){.frow{flex-wrap:wrap}.frow .act{width:100%;padding-left:calc(58px + .9rem)}}
+.more{margin-top:.6rem;border:0;background:none;color:var(--gold);cursor:pointer;font-weight:600;padding:.3rem 0}
+.intro{color:var(--muted);margin:-.4rem 0 1.3rem;max-width:70ch}
+/* profile */
+.prog{display:flex;gap:4px;margin:1rem 0 .4rem}
+.prog i{flex:1;height:8px;border-radius:99px;background:var(--raised)}
+.prog i.on{background:var(--c)}
+.proglab{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
+.evt{display:flex;align-items:center;gap:.8rem;padding:.65rem .8rem;border-radius:12px;background:var(--raised);margin-top:.5rem}
+.evt .age{background:var(--bg)}
+.evt div.m{flex:1;min-width:0}.evt small{display:block;color:var(--muted);font-size:.82rem}
+.tlf{display:flex;flex-wrap:wrap;gap:.35rem;margin:.8rem 0 .2rem}
+.tlf button{border:1px solid var(--line2);background:none;color:var(--muted);border-radius:99px;padding:.25rem .7rem;font-size:.8rem;cursor:pointer}
+.tlf button[aria-pressed="true"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+.month{font-family:var(--head);font-size:.8rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .4rem}
+.tl li b{display:block}
+.tl li .ty{font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c)}
+.sec{font-family:var(--head);font-size:.95rem;margin-top:1.5rem;display:flex;justify-content:space-between;align-items:center}
+/* guided tour */
+#tour{position:fixed;inset:0;z-index:55}
+.tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 200vmax rgba(5,8,12,.74);outline:2px solid var(--gold);outline-offset:2px;pointer-events:none;transition:left .3s,top .3s,width .3s,height .3s}
+.tour-hole.none{outline:0;width:0!important;height:0!important;left:50%!important;top:50%!important}
+.tour-card{position:fixed;width:min(380px,calc(100vw - 32px));background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:1.3rem 1.3rem 1.1rem;box-shadow:0 30px 80px rgba(0,0,0,.5);transition:left .3s,top .3s}
+.tour-card small{color:var(--gold);font-weight:700;font-size:.78rem;letter-spacing:.04em}
+.tour-card h3{font-size:1.2rem;margin:.35rem 0 .45rem}
+.tour-card p{color:var(--muted);font-size:.95rem}
+.tour-card .actions{justify-content:space-between;align-items:center;margin-top:1.1rem}
+.tour-dots{display:flex;gap:5px}.tour-dots i{width:7px;height:7px;border-radius:50%;background:var(--line2)}.tour-dots i.on{background:var(--gold)}
+@media (prefers-reduced-motion:reduce){.tour-hole,.tour-card{transition:none}}
+/* flows */
+.flow{display:flex;align-items:center;gap:.5rem;margin-bottom:1.4rem;padding:.6rem;border:1px solid var(--line);border-radius:14px;background:var(--panel);flex-wrap:wrap}
+.flow .st{display:flex;align-items:center;gap:.5rem;border:0;background:none;color:var(--muted);padding:.4rem .65rem;border-radius:10px;cursor:pointer;font-weight:500;font-size:.9rem}
+.flow .st b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;border:1px solid var(--line2)}
+.flow .st[aria-current="step"]{color:var(--text);background:var(--raised)}.flow .st[aria-current="step"] b{background:var(--gold);color:#1A1306;border-color:var(--gold)}
+.flow .st.done b{background:var(--green-dim);color:var(--green);border-color:var(--green-dim)}
+.flow .sep{color:var(--faint)}
+.flow .nx{margin-left:auto}
+.hstep{display:flex;gap:1rem;margin-bottom:1.1rem}
+.hnum{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--head);font-weight:700;background:var(--gold-dim);color:var(--gold);margin-top:.2rem}
+.hbody{flex:1;min-width:0}
+.hbody>.panel{margin-top:.6rem}
+.hbody h3{font-size:1.1rem}.hbody>p{color:var(--muted);font-size:.92rem;margin-top:.15rem}
+.tiles3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.tile3{border-radius:12px;padding:.9rem 1rem;background:var(--raised);text-align:left;border:0;color:inherit;cursor:pointer}
+.tile3 b{display:block;font-family:var(--head);font-size:1.7rem}.tile3 small{color:var(--muted)}
+.chipst{display:inline-flex;align-items:center;gap:.3rem;font-size:.76rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;white-space:nowrap}
+.chipst.red{background:var(--red-dim);color:var(--red)}.chipst.amber{background:var(--gold-dim);color:var(--gold)}.chipst.green{background:var(--green-dim);color:var(--green)}.chipst.grey{background:var(--raised);color:var(--muted)}
+.wait{font-size:.84rem;color:var(--faint);margin-top:.6rem}
+.rolenote{font-size:.88rem;color:var(--muted);margin:-.4rem 0 1rem}
+/* step nav, next bar, guide, coach, impact */
+.nav .num{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;border:1px solid var(--line2);flex:none}
+.nav button[aria-current="page"] .num{background:var(--gold);color:#1A1306;border-color:var(--gold)}
+.nav .navsep{height:1px;background:var(--line);margin:.6rem .4rem}
+.stepchip{font-size:.8rem;font-weight:700;color:var(--gold);background:var(--gold-dim);padding:.25rem .65rem;border-radius:99px;white-space:nowrap}
+.nextbar{display:flex;justify-content:flex-end;margin-top:1.6rem}
+#guide{position:fixed;inset:0;z-index:56;background:rgba(5,8,12,.72);display:grid;place-items:center;padding:1rem}
+.gbox{width:min(560px,100%);background:var(--panel);border:1px solid var(--line2);border-radius:22px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.gart{background:radial-gradient(120% 100% at 50% 110%,#3a2a10,var(--bg) 70%);display:grid;place-items:center;padding:1.6rem 1rem 1rem}
+.gart svg{width:220px;height:150px}
+.gtxt{padding:1.3rem 1.5rem 1.4rem}
+.gtxt small{color:var(--gold);font-weight:700;font-size:.78rem;letter-spacing:.04em}
+.gtxt h3{font-size:1.4rem;margin:.35rem 0 .5rem}
+.gtxt p{color:var(--muted);font-size:1rem;line-height:1.55}
+.gnav{display:flex;align-items:center;justify-content:space-between;margin-top:1.3rem}
+.coach{position:absolute;z-index:45;width:min(330px,calc(100vw - 32px));background:var(--text);color:var(--bg);border-radius:16px;padding:1rem 1.05rem .9rem;box-shadow:0 18px 50px rgba(0,0,0,.45);display:flex;gap:.8rem}
+.coach .ci{flex:none;width:40px;height:40px;border-radius:12px;background:var(--gold);display:grid;place-items:center;color:#1A1306}
+.coach b{display:block;font-size:.95rem;margin-bottom:.15rem}.coach p{font-size:.88rem;color:#3b4252;line-height:1.4}
+.coach .cact{display:flex;gap:.8rem;margin-top:.55rem}.coach button{border:0;background:none;font-weight:700;cursor:pointer;padding:0;font-size:.85rem;color:#1A1306}.coach button.sec{color:#6b7280;font-weight:500}
+.coach::before{content:"";position:absolute;width:14px;height:14px;background:var(--text);transform:rotate(45deg);left:var(--ax,30px)}
+.coach.below::before{top:-7px}.coach.above::before{bottom:-7px}
+.pulse{outline:3px solid var(--gold);outline-offset:3px;border-radius:12px;animation:pl 1.6s ease-in-out infinite}
+@keyframes pl{50%{outline-color:transparent}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+.imp-hero{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+@media(max-width:1100px){.imp-hero{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.imp{position:relative}.imp .q{font-size:.85rem;color:var(--muted)}.imp .big{font-family:var(--head);font-size:2.4rem;font-weight:700;line-height:1.1;margin:.3rem 0}.imp .how{font-size:.8rem;color:var(--faint);margin-top:.4rem}
+.quote{border-left:3px solid var(--green);padding:.4rem 0 .4rem 1rem;margin-bottom:.9rem}.quote p{font-family:var(--head);font-size:1.02rem;line-height:1.5}.quote small{color:var(--muted)}
+/* people-first */
+.why{position:relative;z-index:1;display:grid;gap:.7rem;margin-top:1.4rem;max-width:560px}
+.why div{display:flex;gap:.9rem;align-items:baseline;background:rgba(20,26,36,.75);border:1px solid var(--line);border-radius:14px;padding:.8rem 1rem;backdrop-filter:blur(4px)}
+.why b{font-family:var(--head);font-size:1.6rem;color:var(--gold);flex:none;min-width:70px}
+.why span{color:var(--text);font-size:.92rem;line-height:1.4}.why small{display:block;color:var(--faint);font-size:.75rem;margin-top:.15rem}
+.tagline{font-size:.78rem;color:var(--gold);font-weight:700;margin:-1.6rem .5rem 1.6rem;letter-spacing:.02em}
+.pcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-bottom:1.6rem}
+@media(max-width:900px){.pcards{grid-template-columns:1fr}}
+.pc{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:1.2rem;display:flex;flex-direction:column;gap:.7rem;border-top:3px solid var(--c)}
+.pc .who{display:flex;gap:.8rem;align-items:center}.pc .who .av{width:48px;height:48px;font-size:1rem}
+.pc .who b{font-size:1.1rem;display:block}.pc .who small{color:var(--muted)}
+.pc .why2{font-size:1rem;line-height:1.45}.pc .why2 strong{color:var(--c)}
+.pc .said{font-family:var(--head);font-size:.92rem;color:var(--muted);border-left:2px solid var(--line2);padding-left:.7rem}
+.pc .actions{margin-top:auto;justify-content:flex-start}
+.loop{text-align:center}.loop .av{width:72px;height:72px;font-size:1.5rem;margin:0 auto .8rem}
+.loop h3{font-size:1.35rem!important}.loop p{color:var(--muted);margin-top:.4rem}
+#toast{position:fixed;left:50%;bottom:calc(1.4rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);opacity:0;z-index:60;background:var(--text);color:var(--bg);padding:.65rem 1.1rem;border-radius:10px;font-weight:600;font-size:.92rem;transition:.25s;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="login">
+  <div class="door-side">
+    <div class="door" aria-hidden="true">
+      <svg viewBox="0 0 300 460">
+        <defs>
+          <radialGradient id="lg" cx="50%" cy="80%" r="70%"><stop offset="0" stop-color="#FFE3A3"/><stop offset=".45" stop-color="#F0B94A"/><stop offset="1" stop-color="#7A4E10"/></radialGradient>
+          <linearGradient id="beamg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0B94A" stop-opacity=".45"/><stop offset="1" stop-color="#F0B94A" stop-opacity="0"/></linearGradient>
+        </defs>
+        <path class="beam" d="M40 440 L260 440 L380 640 L-80 640 Z" fill="url(#beamg)"/>
+        <path d="M30 440 V150 A120 120 0 0 1 270 150 V440" fill="none" stroke="#2B3446" stroke-width="10"/>
+        <g class="glow"><path d="M45 440 V152 A105 105 0 0 1 255 152 V440 Z" fill="url(#lg)"/></g>
+        <path d="M150 210 v80 M118 240 h64" stroke="#1A1306" stroke-width="10" stroke-linecap="round" class="beam" opacity=".55"/>
+      </svg>
+    </div>
+    <div class="door-copy">
+      <h1>No one left behind.</h1>
+      <p>A church’s promise to the people it visits in prison, kept by everyone together.</p>
+    </div>
+  </div>
+  <div class="login-side">
+    <div class="login-box">
+      <div class="wordmark"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 24V10a9 9 0 0 1 18 0v14" fill="none" stroke="#F0B94A" stroke-width="2.4"/><path d="M8 24V11a5 5 0 0 1 10 0v13Z" fill="#F0B94A"/></svg>Open Door</div>
+      <h2>Welcome back</h2>
+      <p>Choose how you serve, then sign in.</p>
+      <div class="roles" role="radiogroup" aria-label="Your role">
+        <div class="roleopt"><input type="radio" name="role" id="r-vol" value="vol" checked><label for="r-vol"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></span><span><b>Visiting volunteer</b><small>Log visits and follow up with people</small></span></label></div>
+        <div class="roleopt"><input type="radio" name="role" id="r-coord" value="coord"><label for="r-coord"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span><b>Church coordinator</b><small>See reports, needs and growth</small></span></label></div>
+        <div class="roleopt"><input type="radio" name="role" id="r-rev" value="review"><label for="r-rev"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span><b>Letter review team</b><small>Pastor and elders who approve letters</small></span></label></div>
+      </div>
+      <div class="field"><label for="email">Email</label><input class="input" id="email" type="text" value="grace.m@ourchurch.org" autocomplete="off"></div>
+      <div class="field"><label for="pw">Password</label><input class="input" id="pw" type="password" value="prototype"></div>
+      <button class="btn full" data-act="signin">Sign in</button>
+      <button class="btn ghost full" style="margin-top:.6rem" data-act="demo">New here? Start with the guided demo</button>
+      <p class="demo-note">Prototype with sample data. Names and facilities are fictional.</p>
+    </div>
+  </div>
+</section>
+
+<!-- APP -->
+<div id="shell" class="hide">
+  <aside class="side">
+    <div class="wordmark"><svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 24V10a9 9 0 0 1 18 0v14" fill="none" stroke="#F0B94A" stroke-width="2.4"/><path d="M8 24V11a5 5 0 0 1 10 0v13Z" fill="#F0B94A"/></svg>Open Door</div>
+    <p class="tagline">No one left behind</p>
+    <nav class="nav" id="nav" aria-label="Sections"></nav>
+    <div class="me" id="me"></div>
+  </aside>
+  <div>
+    <header class="top">
+      <h1 id="title" style="display:flex;align-items:center;gap:.7rem"></h1>
+      <label class="scope">Showing
+        <select id="scope"></select>
+      </label>
+    </header>
+    <main id="view"></main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" data-act="closeall"></div>
+<aside class="drawer" id="drawer" aria-label="Details"></aside>
+<div class="modal" id="modal"></div>
+<div id="tour" class="hide"><div class="tour-hole" id="tour-hole"></div>
+  <div class="tour-card" id="tour-card" role="dialog" aria-modal="true" aria-labelledby="tour-t"><small id="tour-n"></small><h3 id="tour-t"></h3><p id="tour-b"></p>
+  <div class="actions"><div class="tour-dots" id="tour-dots"></div><div style="display:flex;gap:.4rem"><button class="btn ghost sm" data-act="tourskip" id="tour-skip">Skip</button><button class="btn ghost sm" data-act="tourback" id="tour-back">Back</button><button class="btn sm" data-act="tournext" id="tour-next">Next</button></div></div></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ======= Data ======= */
+let seedN=11;const rnd=()=>(seedN=(seedN*16807)%2147483647)/2147483647;
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const iso=d=>d.toISOString().slice(0,10);
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return iso(d)};
+const today=()=>iso(new Date());
+const uid=p=>p+Math.random().toString(36).slice(2,8);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>new Date(d+'T12:00').toLocaleDateString(undefined,{month:'short',day:'numeric'});
+
+const FACS=[{id:'f1',state:'Virginia',name:'Riverbend Correctional Center',short:'Riverbend'},{id:'f2',state:'Virginia',name:'Blue Ridge State Prison',short:'Blue Ridge'},{id:'f3',state:'Maryland',name:'Chesapeake Correctional Institution',short:'Chesapeake'},{id:'f4',state:'Maryland',name:'Patapsco Detention Center',short:'Patapsco'}];
+const VOLS=[{id:'v1',name:'Grace M.',c:'#F0B94A'},{id:'v2',name:'Daniel O.',c:'#8794FF'},{id:'v3',name:'Ruth K.',c:'#5FC8E4'},{id:'v4',name:'Samuel T.',c:'#3DD68C'},{id:'v5',name:'Kofi B.',c:'#F38BA5'},{id:'v6',name:'James L.',c:'#C7A6FF'}];
+const TEAM=[{id:'p1',name:'Pastor Owusu',role:'Pastor',c:'#F0B94A'},{id:'e1',name:'Elder Mensah',role:'Elder',c:'#8794FF'},{id:'e2',name:'Elder Ruth K.',role:'Elder',c:'#5FC8E4'},{id:'e3',name:'Elder Boateng',role:'Elder',c:'#3DD68C'}];
+const STAGES=['First contact','Regular visits','Bible study','Attending services','Preparing for baptism','Baptized'];
+const SCOL=['#6A7A9C','#8794FF','#5FC8E4','#3DD68C','#C7A6FF','#F0B94A'];
+const ACTS=['Music','Scripture reading','Bible study','Prayer','Testimony','Baptism'];
+const CATS={
+  supplies:{label:'Supplies',c:'#5FC8E4',items:['Toiletries','Blanket','Clothes','Food items']},
+  financial:{label:'Financial',c:'#F0B94A',items:['Commissary funds','Stamps & envelopes'],money:true},
+  family:{label:'Family',c:'#8794FF',items:['Family contact','Family visit or video call','Message to family']},
+  care:{label:'Counseling & care',c:'#F38BA5',items:['Counseling','Medical concern','Grief support']},
+  spiritual:{label:'Spiritual',c:'#3DD68C',items:['Bible study','Bible or books','Wants a letter']},
+  other:{label:'Other',c:'#8D97A9',items:['Reentry help','Other']}
+};
+const ETYPES={'Court date':'#FF5C64','Release date':'#3DD68C','Parole hearing':'#8794FF','Transfer':'#5FC8E4','Birthday':'#F0B94A','Other':'#8D97A9'};
+const daysAhead=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const ageOf=d=>Math.max(0,Math.floor((Date.now()-new Date(d+'T12:00'))/864e5));
+const untilOf=d=>Math.round((new Date(d+'T12:00')-new Date(today()+'T12:00'))/864e5);
+const LST=['Needs a letter','Writer assigned','In review','Ready to send','Sent','Replied'];
+const LHELP=['Waiting for the coordinator to assign a writer','Waiting for the writer','The pastor or an elder is reading it','Approved, waiting to go in','On its way, waiting for a reply','Reply reviewed and shared'];
+const WRITERS=['Sister Abena','Brother James','Deaconess Ama','Brother Kofi','Sister Linda','Youth group','Grace M.'];
+const LCOL=['#FF5C64','#8D97A9','#8794FF','#5FC8E4','#F0B94A','#3DD68C'];
+
+function buildSeed(){
+  const first=['Marcus','Terrence','Luis','Andre','Kevin','Jamal','Chris','Paul','Darnell','Miguel','Tyrone','Eric','Brandon','Isaiah','Kwame','Jerome','Anthony','Devon','Ray','Victor','Samuel','Omar','Curtis','Malik','Jose','Derrick','Nathan','Reggie','Elijah','Corey','Hector','Lamar','Felix','Dante','Troy','Wesley','Andre','Gabriel'];
+  const inits='ABCDEFGHJKLMNPRSTW';
+  const dist=[7,9,8,6,4,3];const res=[];let k=0;
+  dist.forEach((n,stage)=>{for(let i=0;i<n;i++){const fac=FACS[k%4].id;res.push({id:'r'+k,name:first[k]+' '+pick(inits.split(''))+'.',fac,stage,topic:pick(['Daniel 2','The sanctuary','Revelation 14','Forgiveness','Prayer','The Sabbath','Second coming','Psalm 51','Romans 8','']),follow:VOLS[(k+stage)%6].id,last:daysAgo(48+Math.floor(rnd()*20)),notes:[]});k++}});
+  res[0].notes.push({d:daysAgo(10),by:'Grace M.',t:'Asked whether God can forgive what he did. Wants to keep studying Daniel.'});
+  const visits=[];
+  for(let w=11;w>=0;w--){const n=2;for(let j=0;j<n;j++){const fac=FACS[Math.floor(rnd()*4)].id;const pool=res.filter(r=>r.fac===fac);const seen=[...pool].sort(()=>rnd()-.5).slice(0,3+Math.floor(rnd()*3)).map(r=>r.id);
+    visits.push({id:uid('x'),d:daysAgo(w*7+Math.floor(rnd()*5)),fac,vols:[VOLS[Math.floor(rnd()*6)].id,VOLS[Math.floor(rnd()*6)].id].filter((v,i,a)=>a.indexOf(v)===i),acts:ACTS.filter(()=>rnd()>.5).slice(0,3).concat(['Music']).filter((v,i,a)=>a.indexOf(v)===i),attend:8+Math.floor(rnd()*5)+Math.round((11-w)*0.9),seen,summary:''})}}
+  visits.forEach(v=>v.seen.forEach(id=>{const r=res.find(x=>x.id===id);if(v.d>r.last)r.last=v.d}));
+  const needs=[];const keys=Object.keys(CATS).filter(k=>k!=='spiritual'||true).filter(k=>k!=='other');
+  const details={'Commissary funds':'Stamps, soap and phone credit','Stamps & envelopes':'To write home','Hygiene items':'Soap, toothpaste, deodorant','Family contact':'Mother in hospital – wants family to call the chaplain','Family visit or video call':'Has not seen his children in 2 years','Message to family':'Wants his sister to know he is doing well','Counseling':'Anger and grief, asked to talk with a pastor','Medical concern':'Back pain, not seen by medical yet','Grief support':'Lost his father last month','Bible study':'Wants weekly lessons on Daniel','Bible or books':'Large-print Bible','Songs & lyrics':'Printed lyrics of the hymns we sang','Reentry help':'Release in 3 months, needs housing leads','Clothing for release':'Shoes and a jacket','Other':'Reading glasses'};
+  Object.assign(details,{'Toiletries':'Soap, toothpaste, deodorant','Blanket':'Cell is cold at night','Clothes':'Sweatshirt, size L','Food items':'Snacks from the approved list'});
+  for(let i=0;i<30;i++){const cat=keys[i%5];const C=CATS[cat];const its=C.items.filter(x=>x!=='Wants a letter');const item=its[Math.floor(rnd()*its.length)];const r=res[Math.floor(rnd()*res.length)];
+    const money=!!C.money;const asked=money?[20,25,30,40,50][Math.floor(rnd()*5)]:1+(rnd()>.7?1:0);
+    const roll=rnd();const supplied=roll<.25?0:roll<.4?Math.floor(asked/2):asked;
+    needs.push({id:uid('n'),res:r.id,fac:r.fac,cat,item,detail:details[item],asked,money,supplied,ordered:!money&&supplied<asked&&rnd()<.45,from:i%3===0?'v1':VOLS[1+Math.floor(rnd()*5)].id,d:daysAgo(2+Math.floor(rnd()*45)),upd:daysAgo(1+Math.floor(rnd()*6)),by:supplied?'Abena S.':null})}
+  const bodies=['Grace told me you have been asking about forgiveness. David asked the same question in Psalm 51, and God answered him. I am praying for you every morning.','We heard you are getting ready for baptism! The youth group made you a card and we are all praying for you.','I was angry for a long time too. I would like to write to you each week if that is alright with you.','Thank you for your question about the sanctuary. I have drawn out the tabernacle for you so you can follow along.','Here is my phone number so you can call me. I will send you some money too.','Your mother asked us to tell you she is home from hospital and doing better.'];
+  const writers=['Sister Abena','Brother James','Youth group','Deaconess Ama','Brother Kofi','Sister Linda','Grace M.','Pathfinders club'];
+  const ABOUT=['Asked if God can forgive him','Wants to keep studying Daniel 2','His mother is in hospital','Getting ready for baptism','Struggling with anger','Asked what the sanctuary means','Feeling forgotten by his family'];
+  const letters=[];const ldist=[4,3,4,3,4,3];
+  ldist.forEach((n,st)=>{for(let i=0;i<n;i++){const r=res[(st*7+i*5+3)%res.length];const rv=TEAM[(st+i)%4];
+    const L={id:uid('l'),res:r.id,about:ABOUT[(st+i)%ABOUT.length],from:i%2?'v1':VOLS[1+i%5].id,writer:st>=1?WRITERS[(st*2+i)%WRITERS.length]:null,body:st>=2?pick(bodies.filter((b,j)=>j!==4)):'',stage:st,reviewer:st>=2?rv.id:null,
+      approval:st>=3?{by:rv.id,d:daysAgo(3+i),note:pick(['Encouraging and scripture-based. No contact details.','Warm and appropriate. Good answer to his question.'])}:null,
+      carrier:st>=3?(i%2===0?'Grace M.':'Mail'):null,sentD:st>=4?daysAgo(2+i):null,returned:null,d:daysAgo(2+st*3+i*2),replies:[]};
+    if(st===5)L.replies.push({d:daysAgo(1+i),ok:i>0,body:['Thank you for writing me. Nobody wrote me in 3 years. Can you tell me what it means to have a clean heart?','I read the lesson twice. Please keep praying for my mom.','I want to be baptized when you come next month.'][i%3]});
+    letters.push(L)}});
+  letters.find(l=>l.stage===1).writer='Grace M.';
+  letters.push({id:uid('l'),res:res[5].id,about:'Feeling forgotten by his family',from:'v4',writer:'Elder Kwarteng',body:bodies[4],stage:2,reviewer:'e1',approval:null,carrier:null,sentD:null,returned:null,d:daysAgo(1),replies:[]});
+  const notes={'Court date':'Family asked the church to pray that morning','Release date':'Needs housing leads and a church to land in','Parole hearing':'Asked whether the pastor can write a letter of support','Transfer':'Moving facility – keep letters going','Birthday':'Send a card from the youth group'};
+  res.forEach((r,i)=>{const start=150+((i*7)%60);r.joined=daysAgo(start);r.hist=[{d:daysAgo(start),stage:0}];for(let s=1;s<=r.stage;s++)r.hist.push({d:daysAgo(Math.max(4,start-s*Math.round(start/(r.stage+1)))),stage:s});r.events=[];r.flag=false});
+  const et=Object.keys(notes);
+  [[1,'Court date',6],[4,'Release date',19],[9,'Parole hearing',11],[14,'Birthday',3],[19,'Transfer',27],[24,'Court date',34],[27,'Release date',48],[31,'Birthday',15],[12,'Court date',-20],[33,'Parole hearing',41]].forEach(([ri,ty,dd])=>{const r=res[ri%res.length];r.events.push({id:uid('e'),type:ty,d:dd>=0?daysAhead(dd):daysAgo(-dd),note:notes[ty],by:pick(VOLS).name})});
+  res[0].notes.push({d:daysAgo(52),by:'Daniel O.',t:'First time at Bible study. Sat at the back but asked for a lesson booklet.'});
+  res[0].notes.push({d:daysAgo(31),by:'Grace M.',t:'Brought his cellmate. Asked about Daniel 2.'});
+  return{res,visits,needs,letters};
+}
+const SKEY='opendoor-demo-v5';
+let S=null;try{const j=JSON.parse(localStorage.getItem(SKEY));if(j&&j.v===5)S=j.s}catch(e){}
+if(!S)S=buildSeed();
+const saveS=()=>{try{localStorage.setItem(SKEY,JSON.stringify({v:5,s:S}))}catch(e){}};
+let U={fx:{},tlf:'all',role:'vol',tab:'home',fac:'',pstage:null,pmine:false,ncat:null,nfilter:'owing',lstage:1,draft:null};
+const ME={vol:{name:'Grace M.',sub:'Visiting volunteer',c:'#F0B94A',vid:'v1'},coord:{name:'Abena S.',sub:'Church coordinator',c:'#F38BA5',vid:'v5'},review:{name:'Pastor Owusu',sub:'Letter review team',c:'#F0B94A',tid:'p1'}};
+const R=id=>S.res.find(r=>r.id===id)||{name:'Unknown',fac:''};
+const F=id=>FACS.find(f=>f.id===id)||{name:'',short:'',state:''};
+const V=id=>VOLS.find(v=>v.id===id)||{name:'',c:'#888'};
+const T=id=>TEAM.find(t=>t.id===id)||{name:'',c:'#888'};
+const inFac=x=>!U.fac||x.fac===U.fac;
+const lFac=l=>!U.fac||R(l.res).fac===U.fac;
+const initials=n=>n.split(/\s+/).map(s=>s[0]).join('').slice(0,2).toUpperCase();
+const av=(n,c,cls='')=>`<span class="av ${cls}" style="background:${c}">${esc(initials(n))}</span>`;
+const owing=n=>Math.max(0,n.asked-n.supplied);
+const amt=(n,v)=>n.money?'$'+v:v+(v===1?' item':' items');
+
+/* ======= Shell ======= */
+const TABS=[['home','My flow','M3 12l9-8 9 8M5 10v10h14V10'],['impact','Impact','M3 3v18h18M7 15l4-4 3 3 5-6'],['follow','Follow-ups','M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0'],['visit','Log a visit','M9 4h6v3H9zM6 6h12v15H6zM9 12h6M9 16h4'],['needs','Needs','M12 21s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z'],['people','People','M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 20v-1a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'],['letters','Letters','M3 5h18v14H3zM3 7l9 6 9-6']];
+const icon=(d,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const queue=()=>S.letters.filter(l=>l.stage===2).length+S.letters.reduce((n,l)=>n+l.replies.filter(r=>!r.ok).length,0);
+const ROLETABS={vol:['home','visit','letters','people'],coord:['home','needs','letters','follow','impact'],review:['home','letters']};
+const FLOWS={vol:[['home','Before you go'],['visit','Log your visit'],['letters','Letters'],['people','My people']],coord:[['home','Who needs us'],['needs','Meet needs'],['letters','Send letters'],['follow','No one left behind']],review:[['home','Review letters'],['letters','All letters']]};
+function flowStrip(){return ''}
+function nextBar(){const F=FLOWS[U.role];const i=F.findIndex(f=>f[0]===U.tab);if(i<0)return '';const nx=F[i+1];return nx?`<div class="nextbar"><button class="btn" data-act="tab" data-k="${nx[0]}">Next: ${nx[1]} →</button></div>`:''}
+const nstat=n=>!owing(n)?'delivered':n.money?(n.supplied?'partly':'requested'):(n.ordered?'ordered':'requested');
+const NST={requested:['Requested','red'],ordered:['Ordered','amber'],partly:['Partly given','amber'],delivered:['Delivered','green']};
+const phys=n=>n.cat==='supplies'||n.item==='Bible or books';
+const nchip=n=>{let[a,b]=NST[nstat(n)];if(!phys(n)&&!n.money){a={Ordered:'In progress',Delivered:'Done'}[a]||a}return `<span class="chipst ${b}">${a}</span>`};
+
+function shell(){
+  document.getElementById('nav').innerHTML=ROLETABS[U.role].map(k=>{const [_,l,d]=TABS.find(t=>t[0]===k);const fi=FLOWS[U.role].findIndex(f=>f[0]===k);const lab=fi>=0?FLOWS[U.role][fi][1]:l;return [k,lab,d,fi]}).map(([k,l,d,fi])=>`${fi<0?'<div class="navsep"></div>':''}<button data-act="tab" data-k="${k}" ${U.tab===k?'aria-current="page"':''}>${fi>=0?`<span class="num">${fi+1}</span>`:icon(d)}<span class="lbl">${l}</span>${k==='letters'&&U.role==='review'&&queue()?`<span class="badge">${queue()}</span>`:''}${k==='follow'&&urgent()?`<span class="badge" style="background:var(--red)">${urgent()}</span>`:''}</button>`).join('');
+  const m=ME[U.role];
+  document.getElementById('me').innerHTML=`${av(m.name,m.c)}<div><b>${esc(m.name)}</b><small>${m.sub}</small></div><span class="meic"><button class="iconbtn" data-act="resetdemo" title="Reset demo data" aria-label="Reset demo data">${icon('M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5')}</button><button class="iconbtn" data-act="tourstart" title="Guided tour" aria-label="Start the guided tour">${icon('M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01')}</button><button class="iconbtn" data-act="signout" title="Sign out" aria-label="Sign out">${icon('M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9')}</button></span>`;
+  const sc=document.getElementById('scope');
+  sc.innerHTML=`<option value="">All facilities</option>`+['Virginia','Maryland'].map(s=>`<optgroup label="${s}">${FACS.filter(f=>f.state===s).map(f=>`<option value="${f.id}" ${U.fac===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</optgroup>`).join('');
+  {const F=FLOWS[U.role];const i=F.findIndex(f=>f[0]===U.tab);document.getElementById('title').innerHTML=(i>=0?`<span class="stepchip">Step ${i+1} of ${F.length}</span> `:'')+esc(i>=0?F[i][1]:'Impact')}
+}
+function render(){shell();const v=document.getElementById('view');saveS();if(!ROLETABS[U.role].includes(U.tab))U.tab='home';v.innerHTML=({home,impact,follow,visit,needs,people,letters})[U.tab]()+nextBar();setTimeout(coachShow,350);if(location.hash.slice(1)!==U.tab)history.replaceState(null,'','#'+U.tab)}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2300)}
+
+/* ======= Charts ======= */
+function arcPath(cx,cy,r,a0,a1){if(a1-a0>=Math.PI*2-.001)a1=a0+Math.PI*2-.001;const P=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];const[x0,y0]=P(a0),[x1,y1]=P(a1);return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${a1-a0>Math.PI?1:0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`}
+function spark(vals,c){const max=Math.max(...vals,1),min=Math.min(...vals);const pts=vals.map((v,i)=>`${(i/(vals.length-1)*88+1).toFixed(1)},${(34-(v-min)/((max-min)||1)*30).toFixed(1)}`).join(' ');return `<svg class="spark" viewBox="0 0 90 36" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+function weekly(){const w=Array(12).fill(0);S.visits.filter(inFac).forEach(v=>{const age=Math.floor((Date.now()-new Date(v.d+'T12:00'))/864e5/7);if(age>=0&&age<12)w[11-age]+=v.attend});return w}
+function areaChart(vals){const W=640,H=200,P=28,max=Math.max(...vals,10)*1.15;const x=i=>P+i*(W-P*2)/(vals.length-1),y=v=>H-P-(v/max)*(H-P*2);
+  const line=vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const grid=[0,.5,1].map(f=>{const yy=y(max/1.15*f);return `<line x1="${P}" x2="${W-P}" y1="${yy}" y2="${yy}" stroke="#262F3F"/><text x="${P-6}" y="${yy+4}" fill="#5E6779" font-size="11" text-anchor="end">${Math.round(max/1.15*f)}</text>`}).join('');
+  const lab=vals.map((v,i)=>i%2===1||i===vals.length-1?`<text x="${x(i)}" y="${H-6}" fill="#5E6779" font-size="11" text-anchor="middle">${i===vals.length-1?'This wk':(vals.length-1-i)+'w ago'}</text>`:'').join('');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Weekly attendance over the last 12 weeks"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0B94A" stop-opacity=".35"/><stop offset="1" stop-color="#F0B94A" stop-opacity="0"/></linearGradient></defs>${grid}<polygon points="${x(0)},${H-P} ${line} ${x(vals.length-1)},${H-P}" fill="url(#ag)"/><polyline points="${line}" fill="none" stroke="#F0B94A" stroke-width="2.5" stroke-linejoin="round"/>${vals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="#0C1017" stroke="#F0B94A" stroke-width="2"><title>${v} attended</title></circle>`).join('')}${lab}</svg>`}
+
+/* ======= Homes: one flow per role ======= */
+const step=(n,title,sub,body)=>`<section class="hstep"><div class="hnum">${n}</div><div class="hbody"><h3>${title}</h3>${sub?`<p>${sub}</p>`:''}${body}</div></section>`;
+const lrow=(l,act)=>`<div class="frow"><div class="mid"><b>${esc(R(l.res).name)} <span class="muted" style="font-weight:400">· ${esc(F(R(l.res).fac).short)}</span></b><small>${esc(l.about||'')}${l.writer?' · writer: '+esc(l.writer):''}</small></div><div class="act">${act}</div></div>`;
+function home(){
+  const me=ME[U.role],first=me.name.split(' ')[0];
+  if(U.role==='vol'){
+    const mine=S.res.filter(r=>r.follow==='v1'||r.flag);
+    const see=mine.filter(r=>r.flag||ageOf(r.last)>=21).sort((a,b)=>(b.flag-a.flag)||a.last.localeCompare(b.last)).slice(0,5);
+    const carry=S.letters.filter(l=>l.stage===3&&l.carrier==='Grace M.');
+    const write=S.letters.filter(l=>l.stage===1&&l.writer==='Grace M.');
+    const did=S.needs.filter(n=>n.from==='v1').sort((a,b)=>(b.upd||b.d).localeCompare(a.upd||a.d)).slice(0,6);
+    const sec=(t,sub,body)=>`<section style="margin-bottom:1.4rem"><h3 style="font-size:1.05rem">${t}</h3>${sub?`<p class="muted" style="font-size:.9rem;margin:.15rem 0 .6rem">${sub}</p>`:'<div style="height:.6rem"></div>'}${body}</section>`;
+    return `<p class="rolenote">Hi ${first}. Here is what to know before your next visit. When you are back, press Next to log it.</p>
+    ${sec('Since your last visit','What the church did about the needs you reported.',`<div class="panel">${did.map(n=>`<div class="frow"><div class="mid"><b>${esc(n.item)} · ${esc(R(n.res).name)}</b><small>${esc(n.detail||'')} · updated ${fmt(n.upd||n.d)}</small></div><div class="act">${nchip(n)}</div></div>`).join('')||'<p class="muted">Nothing reported yet.</p>'}</div>`)}
+    ${sec('People to see','Who to look for this time.',`<div class="panel" id="v-see">${see.length?see.map(r=>`<div class="frow">${ageBadge(ageOf(r.last),21,35)}<div class="mid"><b>${esc(r.name)} ${r.flag?'<span class="chipst amber">On your list</span>':''}</b><small>${esc(F(r.fac).short)} · last seen ${fmt(r.last)} · ${STAGES[r.stage]}</small></div><div class="act"><button class="btn sm ghost" data-act="person" data-id="${r.id}">Profile</button></div></div>`).join(''):'<p class="muted">Everyone has been seen recently.</p>'}</div>`)}
+    ${sec('Letters to carry in','Approved by the pastor. Mark each one when you hand it in.',`<div class="panel">${carry.length?carry.map(l=>lrow(l,`<button class="btn sm" data-act="lsent" data-id="${l.id}">Mark handed in</button>`)).join(''):'<p class="muted">No letters to carry this time.</p>'}</div>`)}
+    ${write.length?sec('Letters you were asked to write','',`<div class="panel">${write.map(l=>lrow(l,`<button class="btn sm" data-act="lwrite" data-id="${l.id}">Write letter</button>`)).join('')}</div>`):''}`;
+  }
+  if(U.role==='coord'){
+    const rec=[...S.visits].filter(inFac).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,4);
+    const x=F4();const cards=[];const used=new Set();
+    const add=(r,c,why,said,act)=>{if(!r||used.has(r.id)||cards.length>=4)return;used.add(r.id);cards.push({r,c,why,said,act})};
+    const m0=x.missed[0];if(m0)add(m0.r,'#F0B94A',`Has not been seen in <strong>${ageOf(m0.r.last)} days</strong>. He was not there at the last ${esc(F(m0.r.fac).short)} visit.`,m0.r.notes[0]&&m0.r.notes[0].t,`<button class="btn sm" data-act="flag" data-id="${m0.r.id}">${m0.r.flag?'On the next visit list ✓':'Add to next visit'}</button>`);
+    const e0=x.ev[0];if(e0)add(e0.r,ETYPES[e0.e.type]||'#3DD68C',`<strong>${esc(e0.e.type)} ${e0.u===0?'today':'in '+e0.u+' days'}</strong>. ${esc(e0.e.note||'')}`,null,`<button class="btn sm" data-act="writeto" data-id="${e0.r.id}">Send a word of support</button>`);
+    const n0=x.needsW.find(n=>!used.has(n.res));if(n0)add(R(n0.res),'#FF5C64',`Asked for <strong>${esc(n0.item.toLowerCase())}</strong> ${ageOf(n0.d)} days ago. ${esc(n0.detail||'')}`,null,`<button class="btn sm" data-act="gneeds" data-k="owing">Meet this need</button>`);
+    const l0=S.letters.filter(lFac).filter(l=>l.stage===0&&!used.has(l.res))[0];if(l0)add(R(l0.res),'#8794FF',`<strong>Asked for a letter.</strong> ${esc(l0.about)}.`,null,`<button class="btn sm" data-act="lassign" data-id="${l0.id}">Choose a writer</button>`);
+    return `<p class="rolenote">Hi ${first}. These people need the church this week. Then read the latest reports, and press Next to meet the needs.</p>
+    <h3 style="font-size:1.1rem;margin-bottom:.8rem">Who needs us this week</h3>
+    <div class="pcards">${cards.map(k=>`<div class="pc" style="--c:${k.c}"><div class="who">${av(k.r.name,k.c)}<div><b>${esc(k.r.name)}</b><small>${esc(F(k.r.fac).short)} · ${STAGES[k.r.stage]}</small></div></div><p class="why2">${k.why}</p>${k.said?`<p class="said">“${esc(k.said)}”</p>`:''}<div class="actions">${k.act}<button class="btn sm ghost" data-act="person" data-id="${k.r.id}">His story</button></div></div>`).join('')}</div>
+    <h3 style="font-size:1.1rem;margin-bottom:.8rem">This week’s visit reports</h3>
+    <div id="h-reports">${rec.map(v=>{const d=new Date(v.d+'T12:00');const nn=S.needs.filter(n=>n.fac===v.fac&&n.d===v.d);const ll=S.letters.filter(l=>l.d===v.d&&R(l.res).fac===v.fac&&l.stage===0);
+      return `<div class="panel" style="margin-bottom:.9rem"><div class="vrow" style="padding:0"><div class="vdate"><b>${d.getDate()}</b><small>${d.toLocaleDateString(undefined,{month:'short'})}</small></div><div style="flex:1;min-width:0"><b>${esc(F(v.fac).name)}</b><div class="muted" style="font-size:.88rem;margin-top:.15rem">${v.vols.map(x=>esc(V(x).name)).join(', ')} · ${v.attend} attended${v.summary?' · '+esc(v.summary):''}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem">${v.seen.map(id=>`<button class="pill" data-act="person" data-id="${id}" style="border:0;cursor:pointer"><i style="background:${SCOL[R(id).stage]}"></i>${esc(R(id).name)}</button>`).join('')}</div>
+      ${nn.length||ll.length?`<p style="margin-top:.6rem;font-size:.88rem">${nn.length?`<span class="chipst red">${nn.length} need${nn.length===1?'':'s'}</span>`:''} ${ll.length?`<span class="chipst grey">${ll.length} letter request${ll.length===1?'':'s'}</span>`:''}</p>`:''}</div></div></div>`}).join('')}</div>`;
+  }
+  const rv=S.letters.filter(l=>l.stage===2).sort((a,b)=>b.d.localeCompare(a.d)),rp=S.letters.filter(l=>l.replies.some(p=>!p.ok)),mail=S.letters.filter(l=>l.stage===3&&l.carrier==='Mail');
+  return `<p class="rolenote">Pastor Owusu and the elders review every letter going in and every reply coming out. Nothing reaches anyone without your approval.</p>
+  ${step('✉','Letters to review',`${rv.length} waiting.`,`<div class="panel">${rv.slice(0,4).map(l=>`<div class="frow"><div class="mid"><b>${esc(l.writer)} → ${esc(R(l.res).name)}</b><small>${esc(l.body).slice(0,110)}…</small></div><div class="act"><button class="btn sm" data-act="approve" data-id="${l.id}">Approve</button><button class="btn sm danger" data-act="return" data-id="${l.id}">Return</button></div></div>`).join('')||'<p class="muted">Nothing to review.</p>'}</div>`)}
+  ${step('↩','Replies to check',`${rp.length} waiting.`,`<div class="panel">${rp.map(l=>{const i=l.replies.findIndex(p=>!p.ok);return `<div class="frow"><div class="mid"><b>${esc(R(l.res).name)} wrote back to ${esc(l.writer)}</b><small>${esc(l.replies[i].body)}</small></div><div class="act"><button class="btn sm" data-act="replyok" data-id="${l.id}" data-i="${i}">Share with writer</button></div></div>`}).join('')||'<p class="muted">No replies waiting.</p>'}</div>`)}
+  ${step('✓','Post by mail',`${mail.length} approved letters to post.`,`<div class="panel">${mail.map(l=>lrow(l,`<button class="btn sm" data-act="lsent" data-id="${l.id}">Mark posted</button>`)).join('')||'<p class="muted">Nothing to post.</p>'}</div>`)}`;
+}
+
+/* ======= Impact ======= */
+function impact(){
+  const res=S.res.filter(inFac),needs=S.needs.filter(inFac),lets=S.letters.filter(lFac);
+  const met=needs.filter(n=>!owing(n));const pct=needs.length?Math.round(met.length/needs.length*100):0;
+  const days=met.map(n=>Math.max(1,Math.round((new Date((n.upd||n.d)+'T12:00')-new Date(n.d+'T12:00'))/864e5))).sort((a,b)=>a-b);const med=days.length?days[Math.floor(days.length/2)]:0;
+  const seen30=res.filter(r=>ageOf(r.last)<=30).length;const seenPct=res.length?Math.round(seen30/res.length*100):0;
+  const moved=res.filter(r=>(r.hist||[]).some(h=>h.stage>0&&ageOf(h.d)<=90)).length;
+  const sent=lets.filter(l=>l.stage>=4).length,reps=lets.filter(l=>l.replies.length).length;
+  const quotes=lets.flatMap(l=>l.replies.filter(p=>p.ok).map(p=>({p,l}))).slice(0,3);
+  const card=(q,big,sub,how,c)=>`<div class="panel imp"><div class="q">${q}</div><div class="big" style="color:${c}">${big}</div><div class="muted" style="font-size:.88rem">${sub}</div><div class="how">${how}</div></div>`;
+  return `<p class="rolenote">Impact is not how busy we were. It is whether the promises made inside were kept, and whether people are growing. These four questions are for the church board.</p>
+  <div class="imp-hero">
+    ${card('Did we keep our promises?',pct+'%',`${met.length} of ${needs.length} needs met`,`Typical wait: ${med} day${med===1?'':'s'} from asked to delivered`,'var(--green)')}
+    ${card('Did anyone get forgotten?',seenPct+'%',`seen in the last 30 days`,`${res.length-seen30} people not seen in over a month`,seenPct>=70?'var(--green)':'var(--gold)')}
+    ${card('Are people growing?',moved,`moved forward a stage in 90 days`,`${res.filter(r=>r.stage===5).length} baptized so far`,'var(--violet)')}
+    ${card('Are letters getting through?',sent,`letters sent`,`${reps} answered by the person inside`,'var(--cyan)')}
+  </div>
+  <div class="grid two mt">
+    <div class="panel"><div class="ph"><h3>Weekly attendance</h3><small>Last 12 weeks</small></div>${areaChart(weekly())}</div>
+    <div class="panel"><div class="ph"><h3>In their own words</h3><small>Replies, shared with permission</small></div>${quotes.map(({p,l})=>`<div class="quote"><p>“${esc(p.body)}”</p><small>${esc(R(l.res).name)} · to ${esc(l.writer)} · ${fmt(p.d)}</small></div>`).join('')||'<p class="muted">No replies shared yet.</p>'}</div>
+  </div>
+  <div class="panel mt"><div class="ph"><h3>Where people are on the journey</h3><small>Tap a stage</small></div><div class="journey">${(()=>{const cnt=STAGES.map((_,i)=>res.filter(r=>r.stage===i).length),mx=Math.max(...cnt,1);return STAGES.map((st,i)=>`<button class="jrow" data-act="gostage" data-i="${i}"><span class="l">${st}</span><span class="bar"><span class="fill" style="width:${cnt[i]/mx*100}%;background:${SCOL[i]}"></span></span><span class="n">${cnt[i]}</span></button>`).join('')})()}</div></div>
+  <div class="actions" style="justify-content:flex-start"><button class="btn ghost" data-act="sharereport">Share this report with the church board</button></div>`;
+}
+
+/* ======= Dashboard ======= */
+function dash(){
+  const res=S.res.filter(inFac),needs=S.needs.filter(inFac),lets=S.letters.filter(lFac);
+  const w=weekly();const month=w.slice(-4).reduce((a,b)=>a+b,0),prev=w.slice(-8,-4).reduce((a,b)=>a+b,0);
+  const askedN=needs.length,metN=needs.filter(n=>!owing(n)).length,pct=askedN?Math.round(metN/askedN*100):0;
+  const counts=STAGES.map((_,i)=>res.filter(r=>r.stage===i).length);const maxc=Math.max(...counts,1);
+  const growing=res.filter(r=>r.stage>=2).length;
+  const byCat=Object.entries(CATS).map(([k,c])=>({k,c,open:needs.filter(n=>n.cat===k&&owing(n)).length}));
+  let a0=0;const C=2*Math.PI,r=74;
+  const donut=needs.length?[{v:metN,c:'#3DD68C'},{v:needs.filter(n=>n.supplied&&owing(n)).length,c:'#F0B94A'},{v:needs.filter(n=>!n.supplied).length,c:'#FF5C64'}].filter(s=>s.v).map(s=>{const a1=a0+s.v/askedN*C;const p=`<path d="${arcPath(90,90,r,a0+.03,a1-.03)}" stroke="${s.c}" stroke-width="18" fill="none" stroke-linecap="round"/>`;a0=a1;return p}).join(''):'';
+  const recent=[...S.visits].filter(inFac).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,3);
+  const m=ME[U.role];const hr=new Date().getHours();
+  return `<div class="welcome"><h2>Good ${hr<12?'morning':hr<17?'afternoon':'evening'}, ${esc(m.name.split(' ')[0])}</h2><p>${U.fac?esc(F(U.fac).name):'All four facilities'} · last 30 days</p></div>
+  ${attStrip(F4())}
+  <div class="grid kpis">
+    <div class="panel kpi"><div class="lab">People in ministry</div><div class="big num">${res.length}</div><div class="sub">${growing} studying or beyond</div>${spark([3,5,6,8,9,11,12,res.length].map((v,i,a)=>Math.round(v*res.length/a[a.length-1])),'#8794FF')}</div>
+    <div class="panel kpi"><div class="lab">Attendance</div><div class="big num">${month}</div><div class="sub" style="color:${month>=prev?'var(--green)':'var(--red)'}">${month>=prev?'▲':'▼'} ${Math.abs(month-prev)} vs previous 30 days</div>${spark(w,'#F0B94A')}</div>
+    <div class="panel kpi"><div class="lab">Needs met</div><div class="big num">${pct}%</div><div class="sub">${askedN-metN} still owing</div>${spark([.45,.55,.6,.7,.75,.82,.9,1].map(f=>Math.round(pct*f)),'#3DD68C')}</div>
+    <div class="panel kpi"><div class="lab">Letters in motion</div><div class="big num">${lets.filter(l=>l.stage<4).length}</div><div class="sub">${lets.filter(l=>l.stage>=4).length} sent · ${lets.reduce((n,l)=>n+l.replies.length,0)} replies</div>${spark([2,3,3,5,4,6,7,8],'#5FC8E4')}</div>
+  </div>
+  <div class="grid two mt">
+    <div class="panel"><div class="ph"><h3>Growth journey</h3><small>Tap a stage to see who is there</small></div>
+      <div class="journey">${STAGES.map((s,i)=>`<button class="jrow" data-act="gostage" data-i="${i}"><span class="l">${s}</span><span class="bar"><span class="fill" style="width:${counts[i]/maxc*100}%;background:${SCOL[i]}"></span></span><span class="n">${counts[i]}</span></button>`).join('')}</div>
+    </div>
+    <div class="panel"><div class="ph"><h3>Needs</h3><small><a href="#needs" data-act="tab" data-k="needs" style="color:var(--gold)">Open needs board</a></small></div>
+      <div class="donut-wrap"><div class="donut"><svg viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="${r}" stroke="#1B2230" stroke-width="18" fill="none"/>${donut}</svg><div class="center"><b>${pct}%</b><small>met</small></div></div>
+      <div class="legend">${byCat.map(b=>`<div><i style="background:${b.c.c}"></i>${b.c.label}<span style="color:${b.open?'var(--red)':'var(--green)'}">${b.open?b.open+' owing':'✓'}</span></div>`).join('')}</div></div>
+    </div>
+  </div>
+  <div class="grid two mt">
+    <div class="panel"><div class="ph"><h3>Weekly attendance</h3><small>Last 12 weeks</small></div>${areaChart(w)}</div>
+    <div class="panel"><div class="ph"><h3>Latest visits</h3><small><a href="#visit" data-act="tab" data-k="visit" style="color:var(--gold)">Log a visit</a></small></div>
+      <div class="vlist">${recent.length?recent.map(v=>{const d=new Date(v.d+'T12:00');return `<div class="vrow"><div class="vdate"><b>${d.getDate()}</b><small>${d.toLocaleDateString(undefined,{month:'short'})}</small></div><div><b>${esc(F(v.fac).short)}</b> <span class="muted">· ${v.attend} attended</span><div class="muted" style="font-size:.86rem;margin-top:.15rem">${v.vols.map(x=>esc(V(x).name)).join(', ')} · ${v.acts.join(', ')}</div></div></div>`}).join(''):'<p class="muted">No visits logged yet.</p>'}</div>
+    </div>
+  </div>`;
+}
+
+/* ======= Log a visit (wizard) ======= */
+const newRow=()=>({who:'',name:'',stage:0,needs:[],amount:'',note:'',follow:U.role==='vol'?'v1':'v1'});
+function freshDraft(){return{step:1,d:today(),state:U.fac?F(U.fac).state:'Virginia',fac:U.fac||'',attend:'',vols:U.role==='vol'?['v1']:[],acts:[],rows:[newRow()],summary:''}}
+function visit(){
+  const D=U.draft||(U.draft=freshDraft());
+  const names=['Where','Team','People & needs','Review'];
+  const steps=`<div class="steps">${names.map((n,i)=>`${i?'<hr>':''}<div class="${D.step===i+1?'on':D.step>i+1?'ok':''}"><b>${D.step>i+1?'✓':i+1}</b>${n}</div>`).join('')}</div>`;
+  let body='';
+  if(D.step===1)body=`<div class="panel">
+    <div class="row2"><div class="field"><label for="w-d">Date of visit</label><input class="input" type="date" id="w-d" data-bind="d" value="${D.d}"></div>
+    <div class="field"><label for="w-a">Total attendance</label><input class="input" type="number" min="0" id="w-a" data-bind="attend" value="${esc(D.attend)}" placeholder="How many came?"></div></div>
+    <span class="lbl2">State</span><div class="seg">${['Virginia','Maryland'].map(s=>`<button data-act="wstate" data-s="${s}" aria-pressed="${D.state===s}">${s}</button>`).join('')}</div>
+    <span class="lbl2">Facility</span><div class="choice">${FACS.filter(f=>f.state===D.state).map(f=>`<button class="tile" data-act="wfac" data-id="${f.id}" aria-pressed="${D.fac===f.id}"><b>${esc(f.name)}</b><small>${S.res.filter(r=>r.fac===f.id).length} people known</small></button>`).join('')}</div></div>`;
+  if(D.step===2)body=`<div class="panel">
+    <span class="lbl2" style="margin-top:0">Who went</span><div class="choice">${VOLS.map(v=>`<button class="tile" data-act="wvol" data-id="${v.id}" aria-pressed="${D.vols.includes(v.id)}" style="display:flex;gap:.7rem;align-items:center">${av(v.name,v.c)}<b>${esc(v.name)}</b></button>`).join('')}</div>
+    <span class="lbl2">What happened</span><div class="chips">${ACTS.map(a=>`<label class="chip"><input type="checkbox" data-act-chk="wact" value="${a}" ${D.acts.includes(a)?'checked':''}><span>${a}</span></label>`).join('')}</div>
+    <span class="lbl2">Notes for the church</span><textarea class="input" data-bind="summary" placeholder="Chaplain requests, changes to visiting rules, prayer points">${esc(D.summary)}</textarea></div>`;
+  if(D.step===3){const known=S.res.filter(r=>r.fac===D.fac);
+    body=D.rows.map((p,i)=>`<div class="prow"><div class="head"><b>Person ${i+1}</b>${D.rows.length>1?`<button class="btn sm danger" data-act="wrm" data-i="${i}">Remove</button>`:''}</div>
+      <div class="row2"><div class="field"><label>Who</label><select class="input" data-row="${i}" data-f="who"><option value="">Someone new</option>${known.map(r=>`<option value="${r.id}" ${p.who===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select></div>
+      ${p.who?`<div class="field"><label>Follow-up volunteer</label><select class="input" data-row="${i}" data-f="follow">${VOLS.map(v=>`<option value="${v.id}" ${p.follow===v.id?'selected':''}>${esc(v.name)}</option>`).join('')}</select></div>`:`<div class="field"><label>Name</label><input class="input" data-row="${i}" data-f="name" value="${esc(p.name)}" placeholder="First name and last initial"></div>`}</div>
+      <div class="field"><label>Where they are</label><select class="input" data-row="${i}" data-f="stage">${STAGES.map((s,j)=>`<option value="${j}" ${+p.stage===j?'selected':''}>${s}</option>`).join('')}</select></div>
+      <span class="lbl2">Needs</span>${Object.entries(CATS).map(([k,c])=>`<div class="needgroup"><small>${c.label}</small><div class="chips">${c.items.map(it=>`<label class="chip" style="--c:${c.c}"><input type="checkbox" data-row="${i}" data-need="${k}|${it}" ${p.needs.includes(k+'|'+it)?'checked':''}><span>${it}</span></label>`).join('')}</div></div>`).join('')}
+      ${p.needs.includes('supplies|Clothes')?`<div class="field" style="margin-top:.8rem;max-width:240px"><label>Clothes size</label><input class="input" data-row="${i}" data-f="size" value="${esc(p.size||'')}" placeholder="e.g. L, 34x32, shoes 10"></div>`:''}${p.needs.some(n=>n.startsWith('financial|'))?`<div class="field" style="margin-top:.8rem;max-width:240px"><label>Amount asked ($)</label><input class="input" type="number" min="0" data-row="${i}" data-f="amount" value="${esc(p.amount)}" placeholder="e.g. 25"></div>`:''}
+      <div class="row2" style="margin-top:.8rem"><div class="field"><label>Upcoming date (optional)</label><select class="input" data-row="${i}" data-f="evtype"><option value="">None</option>${Object.keys(ETYPES).map(t=>`<option ${p.evtype===t?'selected':''}>${t}</option>`).join('')}</select></div><div class="field"><label>Date</label><input class="input" type="date" data-row="${i}" data-f="evdate" value="${esc(p.evdate||'')}"></div></div>
+      <div class="field" style="margin-top:.8rem"><label>Notes on this person</label><textarea class="input" data-row="${i}" data-f="note" placeholder="How they seemed, what they asked, changes you noticed">${esc(p.note)}</textarea></div></div>`).join('')+`<button class="btn ghost" data-act="wadd">+ Add another person</button>
+      <p class="lock">Use first name and last initial only. Don’t record charges or anything shared in confidence.</p>`}
+  if(D.step===4){const ppl=D.rows.filter(p=>p.who||p.name.trim());const nn=ppl.reduce((a,p)=>a+p.needs.length,0);
+    body=`<div class="panel review"><dl>
+      <dt>Date</dt><dd>${fmt(D.d)}</dd><dt>Facility</dt><dd>${esc(F(D.fac).name)}, ${esc(D.state)}</dd><dt>Attendance</dt><dd>${D.attend||'–'}</dd>
+      <dt>Team</dt><dd>${D.vols.map(v=>esc(V(v).name)).join(', ')||'–'}</dd><dt>What happened</dt><dd>${D.acts.join(', ')||'–'}</dd>
+      <dt>People</dt><dd>${ppl.map(p=>`${esc(p.who?R(p.who).name:p.name)} <span class="pill"><i style="background:${SCOL[p.stage]}"></i>${STAGES[p.stage]}</span>`).join('<br>')||'–'}</dd>
+      <dt>New needs</dt><dd>${nn?nn+' added to the needs board':'None'}</dd></dl></div>`}
+  const can=D.step===1?!!D.fac:D.step===2?D.vols.length>0:true;
+  return `<div class="wiz">${steps}${body}<div class="navrow">${D.step>1?`<button class="btn ghost" data-act="wback">Back</button>`:'<span></span>'}${D.step<4?`<button class="btn" data-act="wnext" ${can?'':'disabled'}>Continue</button>`:`<button class="btn" data-act="wsubmit">Submit report</button>`}</div></div>`;
+}
+function submitVisit(){
+  const D=U.draft;const seen=[];let nn=0;
+  D.rows.forEach(p=>{if(!p.who&&!p.name.trim())return;let r=S.res.find(x=>x.id===p.who);
+    if(!r){r={id:uid('r'),name:p.name.trim(),fac:D.fac,stage:+p.stage,topic:'',follow:p.follow,last:D.d,notes:[],joined:D.d,hist:[{d:D.d,stage:+p.stage}],events:[],flag:false};S.res.push(r)}
+    else if(+p.stage!==r.stage){(r.hist=r.hist||[]).push({d:D.d,stage:+p.stage})}
+    r.flag=false;if(p.evtype&&p.evdate)(r.events=r.events||[]).push({id:uid('e'),type:p.evtype,d:p.evdate,note:'',by:ME[U.role].name});
+    r.stage=+p.stage;r.last=D.d;r.follow=p.follow;if(p.note.trim())r.notes.unshift({d:D.d,by:ME[U.role].name,t:p.note.trim()});seen.push(r.id);
+    p.needs.forEach(key=>{const[cat,item]=key.split('|');if(item==='Wants a letter'){S.letters.push({id:uid('l'),res:r.id,about:p.note.trim().slice(0,80)||'Asked for someone to write to him',from:ME[U.role].vid||'v1',writer:null,body:'',stage:0,reviewer:null,approval:null,carrier:null,sentD:null,returned:null,d:D.d,replies:[]});nn++;return}const money=cat==='financial';S.needs.push({id:uid('n'),res:r.id,fac:D.fac,cat,item,detail:item==='Clothes'&&p.size?'Size '+p.size:(p.note.trim().slice(0,80)||'Details to follow'),asked:money?(+p.amount||20):1,money,supplied:0,ordered:false,from:ME[U.role].vid||'v1',d:D.d,upd:D.d,by:null});nn++})});
+  S.visits.push({id:uid('x'),d:D.d,fac:D.fac,vols:D.vols,acts:D.acts,attend:+D.attend||0,seen,summary:D.summary});
+  U.draft=null;U.tab=U.role==='vol'?'home':'follow';render();toast(`Report submitted · ${seen.length} people · ${nn} needs`);
+}
+
+/* ======= Follow-ups: no one left behind ======= */
+function F4(){
+  const needsW=S.needs.filter(inFac).filter(n=>owing(n)).sort((a,b)=>a.d.localeCompare(b.d));
+  const letW=S.letters.filter(lFac).filter(l=>l.stage<=2).sort((a,b)=>a.d.localeCompare(b.d));
+  const missed=[];FACS.filter(f=>!U.fac||f.id===U.fac).forEach(f=>{const lv=S.visits.filter(v=>v.fac===f.id).sort((a,b)=>b.d.localeCompare(a.d))[0];if(!lv)return;
+    S.res.filter(r=>r.fac===f.id&&!lv.seen.includes(r.id)).forEach(r=>missed.push({r,v:lv}))});
+  missed.sort((a,b)=>a.r.last.localeCompare(b.r.last));
+  const ev=[];S.res.filter(inFac).forEach(r=>(r.events||[]).forEach(e=>{const u=untilOf(e.d);if(u>=0&&u<=60)ev.push({r,e,u})}));ev.sort((a,b)=>a.u-b.u);
+  return{needsW,letW,missed,ev};
+}
+const urgent=()=>{const x=F4();return x.needsW.filter(n=>ageOf(n.d)>=14).length+x.letW.filter(l=>ageOf(l.d)>=5).length+x.ev.filter(e=>e.u<=7).length};
+const ageBadge=(n,warn,bad,lab='days')=>`<div class="age ${n>=bad?'red':n>=warn?'amber':''}"><b>${n}</b><small>${n===1?lab.replace(/s$/,''):lab}</small></div>`;
+const soonBadge=u=>`<div class="age ${u<=7?'red':u<=21?'amber':'green'}"><b>${u===0?'Today':u}</b><small>${u===0?'':u===1?'day':'days'}</small></div>`;
+function follow(){
+  const x=F4();const lim=(k,a)=>U.fx[k]?a:a.slice(0,5);
+  const more=(k,a)=>a.length>5?`<button class="more" data-act="fxmore" data-k="${k}">${U.fx[k]?'Show fewer':'Show all '+a.length}</button>`:'';
+  const empty=t=>`<div class="empty">${t}</div>`;
+  const rev=U.role==='review';
+  return `<p class="intro">The goal is that no one is left behind. These four lists show what has waited longest, so the team can act today.</p>
+  ${attStrip(x)}
+  <div class="fgrid">
+  <div class="panel" id="fx-needs"><div class="ph"><h3>Needs waiting longest</h3><small>${x.needsW.length} not yet met</small></div>
+    ${x.needsW.length?lim('n',x.needsW).map(n=>`<div class="frow">${ageBadge(ageOf(n.d),7,14)}<div class="mid"><b>${esc(n.item)} · ${amt(n,owing(n))} owing</b><small>${esc(R(n.res).name)} · ${esc(F(n.fac).short)} · asked ${fmt(n.d)}</small></div><div class="act"><button class="btn sm ghost" data-act="supply" data-id="${n.id}">Record supply</button></div></div>`).join('')+more('n',x.needsW):empty('Every need has been met.')}</div>
+  <div class="panel" id="fx-letters"><div class="ph"><h3>Letters not yet sent</h3><small>${x.letW.length} waiting</small></div>
+    ${x.letW.length?lim('l',x.letW).map(l=>`<div class="frow">${ageBadge(ageOf(l.d),3,5)}<div class="mid"><b>Letter for ${esc(R(l.res).name)}</b><small>${l.stage===0?'No writer yet':l.stage===1?'Being written by '+esc(l.writer):'With '+esc(T(l.reviewer).name)}${l.returned?' · returned to writer':''}</small></div><div class="act">${rev&&l.stage===2?`<button class="btn sm" data-act="approve" data-id="${l.id}">Approve</button>`:''}${l.stage===0?`<button class="btn sm ghost" data-act="lassign" data-id="${l.id}">Assign</button>`:`<button class="btn sm ghost" data-act="nudge" data-id="${l.id}">Nudge</button>`}</div></div>`).join('')+more('l',x.letW):empty('No letters are waiting.')}</div>
+  <div class="panel" id="fx-missed"><div class="ph"><h3>Not seen at the last visit</h3><small>${x.missed.length} people</small></div>
+    ${x.missed.length?lim('m',x.missed).map(({r,v})=>`<div class="frow">${ageBadge(ageOf(r.last),21,35)}<div class="mid"><b>${esc(r.name)} ${r.flag?'<span class="pill" style="color:var(--gold)">On next visit list</span>':''}</b><small>Missed ${esc(F(r.fac).short)} on ${fmt(v.d)} · last seen ${fmt(r.last)} · ${esc(V(r.follow).name)} follows up</small></div><div class="act"><button class="btn sm ${r.flag?'ghost':''}" data-act="flag" data-id="${r.id}">${r.flag?'Remove':'Add to next visit'}</button><button class="btn sm ghost" data-act="person" data-id="${r.id}">Profile</button></div></div>`).join('')+more('m',x.missed):empty('Everyone was seen at their last visit.')}</div>
+  <div class="panel" id="fx-events"><div class="ph"><h3>Coming up</h3><small>Next 60 days</small></div>
+    ${x.ev.length?lim('e',x.ev).map(({r,e,u})=>`<div class="frow">${soonBadge(u)}<div class="mid"><b><span style="color:${ETYPES[e.type]||ETYPES.Other}">${esc(e.type)}</span> · ${esc(r.name)}</b><small>${fmt(e.d)} · ${esc(F(r.fac).short)}${e.note?' · '+esc(e.note):''}</small></div><div class="act"><button class="btn sm ghost" data-act="writeto" data-id="${r.id}">Write</button><button class="btn sm ghost" data-act="person" data-id="${r.id}">Profile</button></div></div>`).join('')+more('e',x.ev):empty('No dates coming up. Add court, release or parole dates from a person’s profile.')}</div>
+  </div>
+  <p class="lock" style="margin-top:1rem">Record only the date and type of a court or parole event. Never charges or case details.</p>`;
+}
+function attStrip(x){
+  const n0=x.needsW[0],l0=x.letW[0],m0=x.missed[0],e0=x.ev[0];
+  const card=(k,c,t,n,line)=>`<button class="attc" style="--c:${c}" data-act="gofx" data-k="${k}"><div class="t">${t}</div><div class="n">${n}</div><div class="x">${line}</div></button>`;
+  return `<div class="att">
+  ${card('needs','#FF5C64','Needs waiting',x.needsW.length,n0?`Oldest: ${esc(n0.item)}, ${ageOf(n0.d)} days`:'All met')}
+  ${card('letters','#8794FF','Letters waiting',x.letW.length,l0?`Oldest: ${ageOf(l0.d)} days · ${LST[l0.stage].toLowerCase()}`:'Queue is clear')}
+  ${card('missed','#F0B94A','Missed last visit',x.missed.length,m0?`${esc(m0.r.name)}, not seen in ${ageOf(m0.r.last)} days`:'Everyone seen')}
+  ${card('events','#3DD68C','Coming up',x.ev.length,e0?`${esc(e0.e.type)} · ${esc(e0.r.name)} ${e0.u===0?'today':'in '+e0.u+' days'}`:'Nothing scheduled')}
+  </div>`;
+}
+
+/* ======= Needs ======= */
+function needs(){
+  const all=S.needs.filter(inFac);
+  const sum=list=>{const money=list.filter(n=>n.money),items=list.filter(n=>!n.money);return{req:list.length,met:list.filter(n=>!owing(n)).length,
+    ma:money.reduce((s,n)=>s+n.asked,0),ms:money.reduce((s,n)=>s+n.supplied,0),ia:items.reduce((s,n)=>s+n.asked,0),is:items.reduce((s,n)=>s+n.supplied,0)}};
+  const cell=(a,sup)=>{const parts=[];if(a.ma)parts.push('$'+a.ma);if(a.ia)parts.push(a.ia+(a.ia===1?' item':' items'));return parts.join(' + ')||'–'};
+  const fmtS=x=>{const p=[];if(x.ma)p.push('$'+x.ms);if(x.ia)p.push(x.is+(x.is===1?' item':' items'));return p.join(' + ')||'–'};
+  const fmtO=x=>{const p=[];if(x.ma-x.ms)p.push('$'+(x.ma-x.ms));if(x.ia-x.is)p.push((x.ia-x.is)+((x.ia-x.is)===1?' item':' items'));return p.join(' + ')};
+  const rows=Object.entries(CATS).map(([k,c])=>{const x=sum(all.filter(n=>n.cat===k));const o=fmtO(x);const pct=x.req?Math.round(x.met/x.req*100):0;
+    return `<tr class="click" data-act="ncat" data-k="${k}" tabindex="0" ${U.ncat===k?'style="background:var(--raised)"':''}><td><span style="display:inline-flex;align-items:center;gap:.55rem;font-weight:600"><i style="width:10px;height:10px;border-radius:50%;background:${c.c}"></i>${c.label}</span></td>
+    <td class="amt">${cell(x)}</td><td class="amt done">${fmtS(x)}</td><td class="amt ${o?'owing':'done'}">${o||'All supplied'}</td>
+    <td style="min-width:140px"><div style="display:flex;align-items:center;gap:.6rem"><div class="meter" style="flex:1;margin:0;--c:${pct===100?'var(--green)':c.c}"><b style="width:${pct}%"></b></div><span class="muted" style="font-size:.82rem;width:34px">${pct}%</span></div></td></tr>`}).join('');
+  const T0=sum(all);const tO=fmtO(T0);
+  let list=all.filter(n=>!U.ncat||n.cat===U.ncat);
+  if(U.nfilter==='owing')list=list.filter(n=>owing(n));if(U.nfilter==='done')list=list.filter(n=>!owing(n));
+  list.sort((a,b)=>(owing(b)?1:0)-(owing(a)?1:0)||b.d.localeCompare(a.d));
+  return `<div class="panel"><div class="ph"><h3>Asked, supplied and still owing</h3><small>Tap a category to see its requests</small></div>
+  <div class="tablewrap"><table><thead><tr><th>Category</th><th>Asked for</th><th>Supplied</th><th>Still owing</th><th>Met</th></tr></thead><tbody>${rows}
+  <tr><td><b>Total</b></td><td class="amt"><b>${cell(T0)}</b></td><td class="amt done">${fmtS(T0)}</td><td class="amt ${tO?'owing':'done'}">${tO||'All supplied'}</td><td class="muted" style="font-size:.82rem">${T0.req?Math.round(T0.met/T0.req*100):0}% of ${T0.req} requests</td></tr></tbody></table></div></div>
+  <div class="panel mt"><div class="ph" style="flex-wrap:wrap"><h3 style="display:flex;align-items:center;gap:.6rem">${U.ncat?`<i style="width:10px;height:10px;border-radius:50%;background:${CATS[U.ncat].c};display:inline-block"></i>${CATS[U.ncat].label} requests <button class="btn sm ghost" data-act="ncat" data-k="${U.ncat}">Show all</button>`:'Requests'}</h3>
+    <div class="seg">${[['owing','Still owing'],['done','Supplied'],['all','All']].map(([k,l])=>`<button data-act="nfilter" data-k="${k}" aria-pressed="${U.nfilter===k}">${l}</button>`).join('')}</div></div>
+  <div class="tablewrap"><table><thead><tr><th>Need</th><th>For</th><th>Asked</th><th>Supplied</th><th>Owing</th><th></th></tr></thead><tbody>
+  ${list.length?list.map(n=>{const o=owing(n);return `<tr><td><b>${esc(n.item)}</b><div class="muted" style="font-size:.82rem">${esc(n.detail)}</div></td>
+    <td>${esc(R(n.res).name)}<div class="muted" style="font-size:.82rem">${esc(F(n.fac).short)} · ${fmt(n.d)}</div></td>
+    <td class="amt">${amt(n,n.asked)}</td><td class="amt ${n.supplied?'done':'muted'}">${amt(n,n.supplied)}</td><td class="amt ${o?'owing':'done'}">${o?amt(n,o):'✓'}</td>
+    <td style="text-align:right;white-space:nowrap">${nchip(n)} ${U.role!=='coord'||!o?'':n.money?`<button class="btn sm ghost" data-act="supply" data-id="${n.id}">Record gift</button>`:n.ordered?`<button class="btn sm" data-act="ndeliver" data-id="${n.id}">${phys(n)?'Mark delivered':'Mark done'}</button>`:`<button class="btn sm ghost" data-act="norder" data-id="${n.id}">${phys(n)?'Order':'Start'}</button>`}</td></tr>`}).join(''):`<tr><td colspan="6"><div class="empty">${U.nfilter==='owing'?'Nothing owing here. Every request has been supplied.':'Nothing here yet.'}</div></td></tr>`}
+  </tbody></table></div></div>`;
+}
+
+/* ======= People ======= */
+function people(){
+  const base=S.res.filter(inFac).filter(r=>!U.pmine||r.follow===(ME[U.role].vid||'v1'));
+  const counts=STAGES.map((_,i)=>base.filter(r=>r.stage===i).length);
+  const list=base.filter(r=>U.pstage===null||r.stage===U.pstage).sort((a,b)=>b.last.localeCompare(a.last));
+  return `<div class="ph" style="flex-wrap:wrap;margin-bottom:1rem"><p class="muted">${base.length} people${U.fac?' at '+esc(F(U.fac).short):' across all facilities'}. Change the facility at the top and the stages update.</p>
+    <div class="seg"><button data-act="pmine" data-v="0" aria-pressed="${!U.pmine}">Everyone</button><button data-act="pmine" data-v="1" aria-pressed="${U.pmine}">My follow-ups</button></div></div>
+  <div class="pipe">${STAGES.map((s,i)=>`<button class="stage" style="--c:${SCOL[i]}" data-act="pstage" data-i="${i}" aria-pressed="${U.pstage===i}"><span class="step">Stage ${i+1}</span><b>${counts[i]}</b><small>${s}</small></button>`).join('')}</div>
+  <div class="panel"><div class="ph"><h3>${U.pstage===null?'Everyone':STAGES[U.pstage]}</h3>${U.pstage!==null?`<button class="btn sm ghost" data-act="pstage" data-i="-1">Show all stages</button>`:''}</div>
+  <div class="tablewrap"><table><thead><tr><th>Name</th><th>Facility</th><th>Stage</th><th>Studying</th><th>Last seen</th><th>Follow-up</th></tr></thead><tbody>
+  ${list.length?list.map(r=>`<tr class="click" data-act="person" data-id="${r.id}" tabindex="0"><td><b>${esc(r.name)}</b></td><td class="muted">${esc(F(r.fac).short)}</td><td><span class="pill"><i style="background:${SCOL[r.stage]}"></i>${STAGES[r.stage]}</span></td><td>${esc(r.topic)||'<span class="muted">–</span>'}</td><td class="muted">${fmt(r.last)}</td><td>${esc(V(r.follow).name)}</td></tr>`).join(''):`<tr><td colspan="6"><div class="empty">No one at this stage${U.fac?' in '+esc(F(U.fac).short):''} yet.</div></td></tr>`}
+  </tbody></table></div></div>`;
+}
+function personDrawer(id){const r=R(id);
+  const ev=[...r.notes.map(n=>({d:n.d,k:'notes',c:'#8794FF',ty:'Note',h:`<b>${esc(n.by)}</b><small>${esc(n.t)}</small>`})),
+    ...S.visits.filter(v=>v.seen.includes(id)).map(v=>({d:v.d,k:'visits',c:'#F0B94A',ty:'Visit',h:`<b>Seen by ${v.vols.map(x=>esc(V(x).name)).join(', ')}</b><small>${v.acts.join(', ')}</small>`})),
+    ...S.visits.filter(v=>v.fac===r.fac&&!v.seen.includes(id)&&v.d>=(r.joined||'0')).map(v=>({d:v.d,k:'visits',c:'#5E6779',ty:'Missed visit',h:`<small>Not seen when the team visited</small>`})),
+    ...S.needs.filter(n=>n.res===id).map(n=>({d:n.d,k:'needs',c:owing(n)?'#FF5C64':'#3DD68C',ty:'Need',h:`<b>${esc(n.item)}</b><small>${owing(n)?amt(n,owing(n))+' still owing · waiting '+ageOf(n.d)+' days':'Supplied'+(n.by?' by '+esc(n.by):'')}</small>`})),
+    ...S.letters.filter(l=>l.res===id).map(l=>({d:l.d,k:'letters',c:'#5FC8E4',ty:'Letter',h:`<b>${l.writer?'From '+esc(l.writer):'Letter requested'}</b><small>${LST[l.stage]}</small>`})),
+    ...S.letters.filter(l=>l.res===id).flatMap(l=>l.replies.map(p=>({d:p.d,k:'letters',c:'#3DD68C',ty:'Reply',h:`<b>Wrote back to ${esc(l.writer)}</b><small>${p.ok?esc(p.body):'Being reviewed'}</small>`}))),
+    ...(r.hist||[]).map(h=>({d:h.d,k:'growth',c:SCOL[h.stage],ty:'Stage',h:`<b>${h.stage===0?'First contact':'Moved to '+STAGES[h.stage]}</b>`})),
+    ...(r.events||[]).filter(e=>untilOf(e.d)<0).map(e=>({d:e.d,k:'events',c:ETYPES[e.type]||'#8D97A9',ty:e.type,h:`<small>${esc(e.note||'')}</small>`}))
+  ].sort((a,b)=>b.d.localeCompare(a.d));
+  const shown=ev.filter(e=>U.tlf==='all'||e.k===U.tlf);
+  let lastM='';const items=shown.map(e=>{const m=new Date(e.d+'T12:00').toLocaleDateString(undefined,{month:'long',year:'numeric'});const head=m!==lastM?`</ul><div class="month">${m}</div><ul class="tl">`:'';lastM=m;return head+`<li style="--c:${e.c}"><span class="ty">${esc(e.ty)}</span> <span class="muted" style="font-size:.8rem">· ${fmt(e.d)}</span>${e.h}</li>`}).join('');
+  const up=(r.events||[]).filter(e=>untilOf(e.d)>=0).sort((a,b)=>a.d.localeCompare(b.d));
+  const stageDate=i=>{const h=(r.hist||[]).find(x=>x.stage===i);return h?fmt(h.d):''};
+  const filters=[['all','All'],['visits','Visits'],['notes','Notes'],['needs','Needs'],['letters','Letters'],['growth','Growth'],['events','Dates']];
+  openDrawer(`<div style="display:flex;justify-content:space-between;align-items:start"><div><h3 style="font-size:1.45rem">${esc(r.name)}</h3><p class="muted">${esc(F(r.fac).name)} · known since ${r.joined?fmt(r.joined):'recently'}</p></div><button class="iconbtn" data-act="closeall" aria-label="Close">${icon('M18 6 6 18M6 6l12 12')}</button></div>
+  <div class="prog">${STAGES.map((s,i)=>`<i class="${i<=r.stage?'on':''}" style="--c:${SCOL[r.stage]}" title="${s}${stageDate(i)?' · '+stageDate(i):''}"></i>`).join('')}</div>
+  <div class="proglab"><span>First contact</span><b style="color:${SCOL[r.stage]}">${STAGES[r.stage]}${stageDate(r.stage)?' since '+stageDate(r.stage):''}</b><span>Baptized</span></div>
+  <div class="row2" style="margin-top:1rem"><div><small class="muted">Last seen</small><p>${fmt(r.last)} · ${ageOf(r.last)} days ago</p></div><div><small class="muted">Follow-up</small><p>${esc(V(r.follow).name)}</p></div><div><small class="muted">Studying</small><p>${esc(r.topic)||'–'}</p></div><div><small class="muted">Stage</small><select class="input" style="padding:.4rem .6rem" data-act-change="dstage" data-id="${r.id}" aria-label="Change stage">${STAGES.map((s,i)=>`<option value="${i}" ${i===r.stage?'selected':''}>${s}</option>`).join('')}</select></div></div>
+  <div class="sec">Coming up <button class="btn sm ghost" data-act="addevt" data-id="${r.id}">+ Add a date</button></div>
+  ${up.length?up.map(e=>`<div class="evt">${soonBadge(untilOf(e.d))}<div class="m"><b style="color:${ETYPES[e.type]||'#8D97A9'}">${esc(e.type)}</b> · ${fmt(e.d)}<small>${esc(e.note||'')}</small></div><button class="iconbtn" data-act="delevt" data-id="${r.id}" data-e="${e.id}" aria-label="Remove date">${icon('M18 6 6 18M6 6l12 12',16)}</button></div>`).join(''):'<p class="muted" style="margin-top:.5rem;font-size:.9rem">No upcoming dates. Add a court date, release date or birthday so the team can prepare.</p>'}
+  <div class="actions" style="justify-content:flex-start;margin-top:1rem"><button class="btn sm" data-act="flag" data-id="${r.id}">${r.flag?'On next visit list ✓':'Add to next visit'}</button><button class="btn sm ghost" data-act="writeto" data-id="${r.id}">Write a letter</button></div>
+  <div class="field" style="margin-top:1rem"><label for="d-note">Add a note</label><textarea class="input" id="d-note" placeholder="Prayer request, a question to answer next time"></textarea></div>
+  <div class="actions" style="justify-content:flex-start;margin-top:.4rem"><button class="btn sm ghost" data-act="addnote" data-id="${r.id}">Save note</button></div>
+  <div class="sec">Timeline <small class="muted" style="font-weight:400;font-family:var(--body)">${ev.length} moments</small></div>
+  <div class="tlf">${filters.map(([k,l])=>`<button data-act="tlf" data-k="${k}" data-id="${r.id}" aria-pressed="${U.tlf===k}">${l}</button>`).join('')}</div>
+  <ul class="tl">${items||'<li>Nothing of this kind yet.</li>'}</ul>`)}
+
+/* ======= Letters ======= */
+function letters(){
+  const L=S.letters.filter(lFac);const counts=LST.map((_,i)=>L.filter(l=>l.stage===i).length);const tot=L.length||1;
+  let a0=-Math.PI/2;const C=Math.PI*2;
+  const segs=counts.map((n,i)=>{if(!n)return'';const a1=a0+n/tot*C;const p=`<path d="${arcPath(150,150,112,a0+.035,a1-.035)}" stroke="${LCOL[i]}" stroke-width="32" fill="none" data-act="lstage" data-i="${i}" class="${U.lstage===i?'sel':'dim'}"><title>${LST[i]}: ${n}</title></path>`;a0=a1;return p}).join('');
+  const st=U.lstage;const sel=L.filter(l=>l.stage===st).sort((a,b)=>a.d.localeCompare(b.d));
+  const R_=U.role,me=ME[R_].name;
+  const who={0:'The coordinator assigns a writer',1:'The writer writes it',2:'The pastor or an elder reviews it',3:'Posted by mail, or carried in by a volunteer',4:'The review team logs the reply',5:'The pastor shares the reply with the writer'}[st];
+  const card=l=>{const r=R(l.res);let a='',info='';
+    if(l.returned)info+=`<div class="approval" style="border-left:3px solid var(--red)">Returned: ${esc(l.returned)}</div>`;
+    if(st===0)a=R_==='coord'?`<button class="btn sm" data-act="lassign" data-id="${l.id}">Assign writer</button>`:`<p class="wait">Waiting for the coordinator to assign a writer</p>`;
+    if(st===1)a=(R_==='coord'||(R_==='vol'&&l.writer===me))?`<button class="btn sm" data-act="lwrite" data-id="${l.id}">Write letter</button>`:`<p class="wait">Waiting for ${esc(l.writer)} to write it</p>`;
+    if(st===2){info+=`<p class="body">${esc(l.body)}</p><div class="approval">With <b style="color:${T(l.reviewer).c}">${esc(T(l.reviewer).name)}</b> since ${fmt(l.d)}</div>`;a=R_==='review'?`<button class="btn sm" data-act="approve" data-id="${l.id}">Approve</button><button class="btn sm danger" data-act="return" data-id="${l.id}">Return to writer</button>`:`<p class="wait">Waiting for ${esc(T(l.reviewer).name)}</p>`}
+    if(st===3){info+=`<div class="approval">Approved by <b>${esc(T(l.approval.by).name)}</b> on ${fmt(l.approval.d)} · <span class="muted">“${esc(l.approval.note)}”</span><br>Going in: <b style="color:var(--gold)">${l.carrier==='Mail'?'by mail (review team)':esc(l.carrier)}</b></div>`;
+      const can=R_==='coord'||(R_==='review'&&l.carrier==='Mail')||(R_==='vol'&&l.carrier===me);a=can?`<button class="btn sm" data-act="lsent" data-id="${l.id}">${l.carrier==='Mail'?'Mark posted':'Mark handed in'}</button>`:`<p class="wait">Waiting for ${l.carrier==='Mail'?'the review team to post it':esc(l.carrier)+' to carry it in'}</p>`}
+    if(st===4){info+=`<div class="approval">Sent ${fmt(l.sentD)} · ${l.carrier==='Mail'?'by mail':'carried in by '+esc(l.carrier)}</div>`;a=R_!=='vol'?`<button class="btn sm ghost" data-act="logreply" data-id="${l.id}">Log a reply</button>`:`<p class="wait">Waiting for a reply</p>`}
+    if(st===5)l.replies.forEach((p,i)=>{info+=`<div class="approval" style="border-left:3px solid var(--green)"><b style="color:var(--green)">${esc(r.name)} wrote back</b> · ${fmt(p.d)}<br><span class="muted">${p.ok||R_==='review'?esc(p.body):'Being checked by the pastor before it is shared.'}</span></div>`;if(!p.ok&&R_==='review')a=`<button class="btn sm" data-act="replyok" data-id="${l.id}" data-i="${i}">Share with writer</button>`});
+    return `<div class="lcard"><div class="top2"><div><b>${esc(r.name)}</b> <span class="muted">· ${esc(F(r.fac).short)}</span><div class="muted" style="font-size:.84rem">${esc(l.about||'')}${l.writer?' · writer: <b style="color:var(--text)">'+esc(l.writer)+'</b>':''}</div></div>${ageBadge(ageOf(l.d),st<3?3:7,st<3?6:14)}</div>${info}<div class="actions" style="justify-content:flex-start">${a}</div></div>`};
+  return `<div class="lgrid">
+  <div class="panel"><div class="ph"><h3>Letter journey</h3><small>Tap a stop</small></div>
+    <div class="ring"><svg viewBox="0 0 300 300" role="img" aria-label="Letters by stage"><circle cx="150" cy="150" r="112" stroke="#1B2230" stroke-width="32" fill="none"/>${segs}</svg><div class="center"><b>${counts[st]}</b><small>${LST[st].toLowerCase()}</small></div></div>
+    <div class="stagelist">${LST.map((s,i)=>`<button data-act="lstage" data-i="${i}" aria-pressed="${st===i}"><i style="background:${LCOL[i]}"></i><div>${i+1}. ${s}<br><small>${LHELP[i]}</small></div><span>${counts[i]}</span></button>`).join('')}</div>
+  </div>
+  <div class="panel"><div class="ph" style="flex-wrap:wrap"><h3 style="display:flex;align-items:center;gap:.5rem"><i style="width:10px;height:10px;border-radius:50%;background:${LCOL[st]};display:inline-block"></i>${st+1}. ${LST[st]}</h3>${st<5?`<button class="btn sm ghost" data-act="lstage" data-i="${st+1}">Next stop: ${LST[st+1]} →</button>`:''}</div>
+    <p class="rolenote" style="margin:0 0 1rem">${who}.</p>
+    ${sel.length?sel.map(card).join(''):'<div class="empty">Nothing at this stop.</div>'}
+  </div></div>`;
+}
+
+/* ======= Modal / drawer ======= */
+let MOK=null;
+function openModal(title,body,ok,fn){const m=document.getElementById('modal');m.innerHTML=`<div class="mbox" role="dialog" aria-modal="true" ${title?'aria-labelledby="mt"':'aria-label="Update"'}>${title?`<h3 id="mt">${title}</h3>`:''}${body}<div class="actions">${ok==='Close'?'':'<button class="btn ghost" data-act="closeall">Cancel</button>'}<button class="btn" data-act="mok">${ok}</button></div></div>`;m.classList.add('open');document.getElementById('scrim').classList.add('open');MOK=fn;setTimeout(()=>m.querySelector('input,textarea,select')?.focus(),30)}
+function openDrawer(html){const d=document.getElementById('drawer');d.innerHTML=html;d.classList.add('open');document.getElementById('scrim').classList.add('open')}
+function closeAll(){document.getElementById('modal').classList.remove('open');document.getElementById('drawer').classList.remove('open');document.getElementById('scrim').classList.remove('open');MOK=null}
+
+/* ======= Getting-started guide and coach cards ======= */
+const ILLO={
+ people:`<svg viewBox="0 0 220 150"><rect x="30" y="20" width="160" height="110" rx="14" fill="#141A24" stroke="#323C4E"/><circle cx="58" cy="52" r="12" fill="#F0B94A"/><rect x="80" y="44" width="80" height="8" rx="4" fill="#E9EDF3"/><rect x="80" y="56" width="50" height="6" rx="3" fill="#5E6779"/><circle cx="58" cy="92" r="12" fill="#8794FF"/><rect x="80" y="84" width="70" height="8" rx="4" fill="#E9EDF3"/><rect x="80" y="96" width="44" height="6" rx="3" fill="#5E6779"/><path d="M168 96 l8 8 14-16" stroke="#3DD68C" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`,
+ clip:`<svg viewBox="0 0 220 150"><rect x="62" y="16" width="96" height="124" rx="12" fill="#141A24" stroke="#323C4E"/><rect x="88" y="8" width="44" height="18" rx="6" fill="#F0B94A"/><g fill="#5E6779"><rect x="78" y="44" width="64" height="7" rx="3"/><rect x="78" y="64" width="50" height="7" rx="3"/><rect x="78" y="84" width="58" height="7" rx="3"/></g><circle cx="140" cy="112" r="16" fill="#3DD68C"/><path d="M132 112 l6 6 10-12" stroke="#0C1017" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+ box:`<svg viewBox="0 0 220 150"><path d="M60 58 L110 34 L160 58 L160 112 L110 136 L60 112Z" fill="#141A24" stroke="#323C4E"/><path d="M60 58 L110 82 L160 58 M110 82 V136" stroke="#323C4E" fill="none"/><path d="M85 46 L135 70" stroke="#F0B94A" stroke-width="8"/><circle cx="166" cy="40" r="18" fill="#3DD68C"/><path d="M157 40 l6 6 11-12" stroke="#0C1017" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+ letter:`<svg viewBox="0 0 220 150"><rect x="40" y="36" width="140" height="92" rx="10" fill="#141A24" stroke="#323C4E"/><path d="M40 44 L110 92 L180 44" stroke="#F0B94A" stroke-width="5" fill="none"/><circle cx="174" cy="40" r="17" fill="#8794FF"/><path d="M166 40 l5 5 10-11" stroke="#0C1017" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+ bell:`<svg viewBox="0 0 220 150"><path d="M80 104 V74 a30 30 0 0 1 60 0 V104 l10 10 H70Z" fill="#141A24" stroke="#F0B94A" stroke-width="4"/><circle cx="110" cy="124" r="7" fill="#F0B94A"/><circle cx="150" cy="54" r="14" fill="#FF5C64"/><text x="150" y="60" text-anchor="middle" font-size="16" font-weight="700" fill="#0C1017" font-family="system-ui">4</text></svg>`,
+ chart:`<svg viewBox="0 0 220 150"><rect x="30" y="20" width="160" height="110" rx="14" fill="#141A24" stroke="#323C4E"/><rect x="56" y="84" width="20" height="30" rx="4" fill="#5E6779"/><rect x="88" y="66" width="20" height="48" rx="4" fill="#8794FF"/><rect x="120" y="52" width="20" height="62" rx="4" fill="#5FC8E4"/><rect x="152" y="36" width="20" height="78" rx="4" fill="#3DD68C"/></svg>`,
+ reply:`<svg viewBox="0 0 220 150"><rect x="34" y="28" width="110" height="64" rx="14" fill="#141A24" stroke="#323C4E"/><rect x="76" y="62" width="110" height="64" rx="14" fill="#1B2230" stroke="#3DD68C"/><rect x="92" y="84" width="70" height="7" rx="3" fill="#E9EDF3"/><rect x="92" y="98" width="48" height="6" rx="3" fill="#5E6779"/></svg>`,
+ door:`<svg viewBox="0 0 220 150"><path d="M70 140 V66 A40 40 0 0 1 150 66 V140" fill="none" stroke="#323C4E" stroke-width="6"/><path d="M80 140 V68 A30 30 0 0 1 140 68 V140Z" fill="#F0B94A"/><path d="M110 80 v28 M98 90 h24" stroke="#1A1306" stroke-width="5" stroke-linecap="round"/></svg>`
+};
+const GUIDE={
+ vol:[['people','New to prison ministry?','Many people inside never get a single visit. Each visit, letter and kept promise tells someone they are not forgotten. This app makes sure nobody slips through the cracks between volunteers.'],['door','Welcome, Grace','You are a visiting volunteer. Your job has three steps, and the app walks you through them in order on the left.'],['people','1. Before you go','See who to look for at the prison, and which approved letters you are carrying in.'],['clip','2. Log your visit','After you leave, four short steps: where you went, who served, who you saw, and what each person needs.'],['box','3. See what the church did','Every need you report turns green here when the church delivers it. You never have to chase anyone.']],
+ coord:[['people','New to prison ministry?','Many people inside never get a single visit, and most who leave return within a few years. A church that keeps showing up changes that. Your job: make sure every promise made inside is kept.'],['door','Welcome, Abena','You coordinate the prison ministry for the church. Four steps each week, in order on the left. Press Next at the bottom of each page.'],['clip','1. Read the reports','What volunteers saw: who came, who they talked to, and what each person needs.'],['box','2. Meet the needs','Order it, then mark it delivered. The volunteer who reported it sees the change on their side.'],['letter','3. Send letters','Pick a writer for everyone who asked for a letter. The pastor checks each one before it goes in.'],['bell','4. No one left behind','What has waited longest: needs, letters, people missed at the last visit, and court dates coming up.'],['chart','Then: Impact','Show your church board what changed: promises kept, people seen, people growing.']],
+ review:[['letter','Why letters matter','For someone with no visitors, a letter may be the only word from outside. You make sure every one is safe and kind.'],['door','Welcome, Pastor Owusu','You and three elders protect every letter. Nothing goes in or comes out without your approval.'],['letter','1. Review letters','Read each letter. Approve it with a note, or return it to the writer with what to change.'],['reply','2. Check replies','When someone writes back, you read it first, then share it with the writer.']]
+};
+let GI=0;
+function guideOpen(){GI=0;guideShow()}
+function guideShow(){const g=GUIDE[U.role],st=g[GI];let el=document.getElementById('guide');if(!el){el=document.createElement('div');el.id='guide';document.body.appendChild(el)}
+  el.innerHTML=`<div class="gbox" role="dialog" aria-modal="true" aria-labelledby="g-t"><div class="gart">${ILLO[st[0]]}</div><div class="gtxt"><small>${GI<2?'Getting started':`Step ${GI-1} of ${g.length-2}`}</small><h3 id="g-t">${esc(st[1])}</h3><p>${esc(st[2])}</p>
+  <div class="gnav"><div class="tour-dots">${g.map((_,i)=>`<i class="${i===GI?'on':''}"></i>`).join('')}</div><div style="display:flex;gap:.4rem">${GI>0?'<button class="btn ghost sm" data-act="gback">Back</button>':'<button class="btn ghost sm" data-act="gdone">Skip</button>'}<button class="btn sm" data-act="gnext">${GI===g.length-1?'Start step 1':'Next'}</button></div></div></div></div>`;
+  el.classList.remove('hide');el.querySelector('[data-act=gnext]').focus()}
+function guideDone(){const el=document.getElementById('guide');if(el)el.classList.add('hide');try{localStorage.setItem('od-guide-'+U.role,'1')}catch(e){}U.tab='home';render()}
+const COACH={
+ 'vol/home':['#v-see .frow','Start here','These are the people to look for. Tap Profile to read their story before you go.'],
+ 'vol/visit':['.choice .tile','Pick the prison','Start by choosing where you visited. Each step has one thing to do.'],
+ 'vol/letters':['.lcard .actions .btn','Your one job here','Each letter has one button for you. Gray text means it is waiting on someone else.'],
+ 'vol/people':['tr.click','Their whole story','Tap anyone to see every visit, need, letter and step of growth.'],
+ 'coord/home':['.pcards .pc','Start with the people','Each card is someone at risk of being forgotten, with one thing you can do today.'],
+ 'coord/needs':['[data-act=norder],[data-act=ndeliver],[data-act=supply]','Order it, then deliver it','Each need has one button. Grace sees the change on her side.'],
+ 'coord/letters':['[data-act=lassign],[data-act=lwrite]','Pick a writer','Choose who writes to each person. The pastor reviews it next.'],
+ 'coord/follow':['.attc','Start each week here','Red means it has waited too long. Tap a card to jump to the list.'],
+ 'coord/impact':['.imp-hero','For the church board','Four questions about real change, not busyness.'],
+ 'review/home':['[data-act=approve]','Approve or return','Read the letter. Approve with a note, or send it back with what to change.'],
+ 'review/letters':['.ring','Every letter’s journey','Tap a stop on the circle to see only those letters.']
+};
+function coachSeen(k){try{return localStorage.getItem('od-coach-'+k)==='1'||localStorage.getItem('od-coach-off')==='1'}catch(e){return false}}
+function coachClear(){document.querySelectorAll('.coach').forEach(c=>c.remove());document.querySelectorAll('.pulse').forEach(x=>x.classList.remove('pulse'))}
+function coachShow(){coachClear();const g=document.getElementById('guide');if(g&&!g.classList.contains('hide'))return;if(document.getElementById('shell').classList.contains('hide'))return;
+  const k=U.role+'/'+U.tab,c=COACH[k];if(!c||coachSeen(k))return;const t=document.querySelector(c[0]);if(!t)return;
+  t.classList.add('pulse');const r=t.getBoundingClientRect(),W=innerWidth;const el=document.createElement('div');el.className='coach';el.setAttribute('role','note');
+  el.innerHTML=`<div class="ci">${icon('M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11',20)}</div><div><b>${esc(c[1])}</b><p>${esc(c[2])}</p><div class="cact"><button data-act="coachok" data-k="${k}">Got it</button><button class="sec" data-act="coachoff">Hide all tips</button></div></div>`;
+  document.body.appendChild(el);const cw=el.offsetWidth,ch=el.offsetHeight;let x=Math.min(Math.max(16,r.left),W-cw-16),y=r.bottom+14+scrollY,cls='below';
+  if(r.bottom+ch+30>innerHeight&&r.top-ch-20>0){y=r.top-ch-14+scrollY;cls='above'}
+  el.classList.add(cls);el.style.left=x+'px';el.style.top=y+'px';el.style.setProperty('--ax',Math.min(Math.max(18,r.left+Math.min(40,r.width/2)-x),cw-30)+'px')}
+function tourStart(){guideOpen()}
+let TI=-1;function tourEnd(){}
+addEventListener('resize',()=>{if(document.querySelector('.coach'))coachShow()});
+
+/* ======= Actions ======= */
+const A={
+  signin:()=>{U.role=document.querySelector('input[name=role]:checked').value;U.tab='home';U.lstage=U.role==='review'?2:U.role==='vol'?3:0;coachClear();U.pmine=U.role==='vol';U.draft=null;
+    document.getElementById('login').classList.add('hide');document.getElementById('shell').classList.remove('hide');render();scrollTo(0,0);let seen=false;try{seen=localStorage.getItem('od-guide-'+U.role)==='1'}catch(e){}if(!seen)setTimeout(guideOpen,300)},
+  demo:()=>{document.getElementById('r-coord').checked=true;A.signin()},
+  gnext:()=>{if(GI>=GUIDE[U.role].length-1)return guideDone();GI++;guideShow()},
+  gback:()=>{if(GI>0){GI--;guideShow()}},
+  gdone:()=>guideDone(),
+  coachok:d=>{try{localStorage.setItem('od-coach-'+d.k,'1')}catch(e){}coachClear()},
+  coachoff:()=>{try{localStorage.setItem('od-coach-off','1')}catch(e){}coachClear();toast('Tips hidden. Press ? to see the guide again.')},
+  sharereport:()=>toast('Report ready to share with the church board'),
+  tourstart:()=>{try{localStorage.removeItem('od-coach-off');Object.keys(COACH).forEach(k=>localStorage.removeItem('od-coach-'+k))}catch(e){}guideOpen()},
+  tournext:()=>{if(TI===TOUR.length-1)return tourEnd();TI++;tourShow()},
+  tourback:()=>{if(TI>0){TI--;tourShow()}},
+  tourskip:()=>tourEnd(),
+  signout:()=>{coachClear();document.getElementById('shell').classList.add('hide');document.getElementById('login').classList.remove('hide');history.replaceState(null,'','#login')},
+  tab:d=>{U.tab=d.k;render();scrollTo(0,0)},
+  gostage:d=>{U.pstage=+d.i;U.pmine=false;U.tab='people';if(!ROLETABS[U.role].includes('people')){openModal(`${STAGES[+d.i]}`,`<div>${S.res.filter(inFac).filter(r=>r.stage===+d.i).map(r=>`<div class="frow"><div class="mid"><b>${esc(r.name)}</b><small>${esc(F(r.fac).short)} · last seen ${fmt(r.last)}</small></div><div class="act"><button class="btn sm ghost" data-act="person" data-id="${r.id}">Profile</button></div></div>`).join('')||'<p class="muted">No one at this stage.</p>'}</div>`,'Close',closeAll);return}render();scrollTo(0,0)},
+  wstate:d=>{U.draft.state=d.s;if(F(U.draft.fac).state!==d.s)U.draft.fac='';render()},
+  wfac:d=>{U.draft.fac=d.id;render()},
+  wvol:d=>{const v=U.draft.vols;const i=v.indexOf(d.id);i<0?v.push(d.id):v.splice(i,1);render()},
+  wnext:()=>{const D=U.draft;D.step++;if(D.step===3&&D.rows.length===1&&!D.rows[0].who&&!D.rows[0].name){const fl=S.res.filter(r=>r.fac===D.fac&&r.flag);if(fl.length){D.rows=fl.map(r=>({...newRow(),who:r.id,stage:r.stage,follow:r.follow}));toast(`${fl.length} people from the next-visit list added`)}}render();scrollTo(0,0)},
+  wback:()=>{U.draft.step--;render();scrollTo(0,0)},
+  wadd:()=>{U.draft.rows.push(newRow());render()},
+  wrm:d=>{U.draft.rows.splice(+d.i,1);render()},
+  wsubmit:submitVisit,
+  ncat:d=>{U.ncat=U.ncat===d.k?null:d.k;render()},
+  nfilter:d=>{U.nfilter=d.k;render()},
+  supply:d=>{const n=S.needs.find(x=>x.id===d.id);openModal(`Record supply · ${esc(n.item)}`,`<p class="muted" style="margin-bottom:1rem">For ${esc(R(n.res).name)}. Asked ${amt(n,n.asked)}, supplied so far ${amt(n,n.supplied)}.</p><div class="field"><label for="m-amt">${n.money?'Amount supplied now ($)':'Items supplied now'}</label><input class="input" id="m-amt" type="number" min="1" value="${owing(n)}"></div><div class="field"><label for="m-by">Supplied by</label><input class="input" id="m-by" value="${esc(ME[U.role].name)}"></div>`,'Save',()=>{const v=+document.getElementById('m-amt').value;if(!v)return toast('Enter an amount.');n.supplied=Math.min(n.asked,n.supplied+v);n.upd=today();n.by=document.getElementById('m-by').value;closeAll();render();toast(owing(n)?`Recorded · ${amt(n,owing(n))} still owing`:'Need fully supplied')})},
+  pstage:d=>{U.pstage=+d.i<0?null:(U.pstage===+d.i?null:+d.i);render()},
+  pmine:d=>{U.pmine=d.v==='1';render()},
+  person:d=>{U.tlf='all';personDrawer(d.id)},
+  addnote:d=>{const t=document.getElementById('d-note').value.trim();if(!t)return toast('Write a note first.');R(d.id).notes.unshift({d:today(),by:ME[U.role].name,t});personDrawer(d.id);toast('Note saved')},
+  writeto:d=>{closeAll();A.compose({to:d.id})},
+  closeall:closeAll,
+  gofx:d=>{if(U.tab!=='follow'){U.tab='follow';render()}document.getElementById('fx-'+d.k)?.scrollIntoView({behavior:'smooth',block:'start'})},
+  fxmore:d=>{U.fx[d.k]=!U.fx[d.k];render()},
+  flag:d=>{const r=R(d.id);r.flag=!r.flag;render();if(document.getElementById('drawer').classList.contains('open'))personDrawer(d.id);toast(r.flag?`${r.name} added to the next visit list`:'Removed from next visit list')},
+  nudge:d=>{const l=S.letters.find(x=>x.id===d.id);toast(`Reminder sent to ${T(l.reviewer).name}`)},
+  openletters:d=>{U.tab='letters';U.lstage=+d.i;render();scrollTo(0,0)},
+  tlf:d=>{U.tlf=d.k;personDrawer(d.id)},
+  addevt:d=>{const r=R(d.id);openModal(`Add a date · ${esc(r.name)}`,`<div class="field"><label for="ev-t">Type</label><select class="input" id="ev-t">${Object.keys(ETYPES).map(t=>`<option>${t}</option>`).join('')}</select></div><div class="field"><label for="ev-d">Date</label><input class="input" type="date" id="ev-d" value="${daysAhead(14)}"></div><div class="field"><label for="ev-n">What should the team do?</label><input class="input" id="ev-n" placeholder="e.g. Pray that morning, send a card"></div><p class="lock">Date and type only. Never charges or case details.</p>`,'Add date',()=>{const dd=document.getElementById('ev-d').value;if(!dd)return toast('Pick a date.');(r.events=r.events||[]).push({id:uid('e'),type:document.getElementById('ev-t').value,d:dd,note:document.getElementById('ev-n').value.trim(),by:ME[U.role].name});closeAll();render();personDrawer(r.id);toast('Date added')})},
+  delevt:d=>{const r=R(d.id);r.events=r.events.filter(e=>e.id!==d.e);render();personDrawer(d.id);toast('Date removed')},
+  mok:()=>MOK&&MOK(),
+  lstage:d=>{U.lstage=+d.i;render()},
+  golet:d=>{U.tab='letters';U.lstage=+d.i;render();scrollTo(0,0)},
+  gneeds:d=>{U.tab='needs';U.nfilter=d.k;U.ncat=null;render();scrollTo(0,0)},
+  compose:()=>{openModal('Request a letter',`<div class="field"><label for="c-to">For</label><select class="input" id="c-to">${S.res.filter(inFac).map(r=>`<option value="${r.id}">${esc(r.name)} · ${esc(F(r.fac).short)}</option>`).join('')}</select></div><div class="field"><label for="c-a">What about?</label><input class="input" id="c-a" placeholder="e.g. Asked about forgiveness"></div>`,'Add request',()=>{S.letters.push({id:uid('l'),res:document.getElementById('c-to').value,about:document.getElementById('c-a').value.trim()||'Someone to write to him',from:ME[U.role].vid||'v1',writer:null,body:'',stage:0,reviewer:null,approval:null,carrier:null,sentD:null,returned:null,d:today(),replies:[]});U.lstage=0;closeAll();render();toast('Request added')})},
+  lassign:d=>{const l=S.letters.find(x=>x.id===d.id);openModal(`Assign a writer · ${esc(R(l.res).name)}`,`<p class="muted" style="margin-bottom:1rem">About: ${esc(l.about)}</p><div class="field"><label for="w-w">Who will write?</label><select class="input" id="w-w">${WRITERS.map(w=>`<option>${w}</option>`).join('')}</select></div>`,'Assign',()=>{l.writer=document.getElementById('w-w').value;l.stage=1;l.d=today();closeAll();U.lstage=1;render();toast(`${l.writer} will see this on their list`)})},
+  lwrite:d=>{const l=S.letters.find(x=>x.id===d.id);openModal(`Write to ${esc(R(l.res).name)}`,`<p class="muted" style="margin-bottom:.8rem">About: ${esc(l.about)}${l.returned?'<br><span style="color:var(--red)">Returned: '+esc(l.returned)+'</span>':''}</p><div class="field"><label for="w-b">Letter</label><textarea class="input" id="w-b" style="min-height:160px" placeholder="Encouragement, scripture and an answer to his question">${esc(l.body||'')}</textarea></div><p class="lock">No phone numbers, addresses, money or photos. Nothing about his case.</p>`,'Send for review',()=>{const b=document.getElementById('w-b').value.trim();if(!b)return toast('Write the letter first.');l.body=b;l.stage=2;l.returned=null;l.reviewer=l.reviewer||TEAM[S.letters.filter(x=>x.stage===2).length%4].id;l.d=today();closeAll();render();toast(`Sent to ${T(l.reviewer).name} for review`)})},
+  approve:d=>{const l=S.letters.find(x=>x.id===d.id);openModal('Approve letter',`<p class="muted" style="margin-bottom:1rem">${esc(l.writer)} to ${esc(R(l.res).name)}</p><div class="field"><label for="a-by">Approved by</label><select class="input" id="a-by">${TEAM.map(t=>`<option value="${t.id}" ${t.id===l.reviewer?'selected':''}>${esc(t.name)}</option>`).join('')}</select></div><div class="field"><label for="a-n">Approval note</label><textarea class="input" id="a-n">Encouraging and scripture-based. No contact details or money.</textarea></div><div class="field"><label for="a-c">Who takes it in?</label><select class="input" id="a-c"><option value="Mail">Review team posts it by mail</option>${VOLS.map(v=>`<option ${v.name==='Grace M.'?'selected':''}>${esc(v.name)}</option>`).join('')}</select></div>`,'Approve',()=>{l.approval={by:document.getElementById('a-by').value,d:today(),note:document.getElementById('a-n').value.trim()};l.carrier=document.getElementById('a-c').value;l.stage=3;l.d=today();closeAll();render();toast(l.carrier==='Mail'?'Approved · ready to post':`Approved · ${l.carrier} will see it on her list`)})},
+  return:d=>{const l=S.letters.find(x=>x.id===d.id);openModal('Return to writer',`<div class="field"><label for="r-n">What should the writer change?</label><textarea class="input" id="r-n">Please remove your phone number and the offer to send money.</textarea></div>`,'Return letter',()=>{l.returned=document.getElementById('r-n').value.trim();l.stage=1;l.d=today();closeAll();render();toast('Returned to the writer')})},
+  lsent:d=>{const l=S.letters.find(x=>x.id===d.id);l.stage=4;l.sentD=today();l.d=today();render();const r=R(l.res);
+    openModal('',`<div class="loop">${av(r.name,'#5FC8E4')}<h3>${esc(r.name.split(' ')[0])} will hear from ${esc(l.writer)}</h3><p>${esc(l.about)}. For someone with no visitors, this may be the only word from outside this month. It now clears for everyone.</p></div>`,'Close',closeAll)},
+  logreply:d=>{openModal('Log a reply',`<div class="field"><label for="lr">Reply as received</label><textarea class="input" id="lr"></textarea></div>`,'Log reply',()=>{const t=document.getElementById('lr').value.trim();if(!t)return toast('Add the reply text.');const l=S.letters.find(x=>x.id===d.id);l.replies.push({d:today(),ok:false,body:t});l.stage=5;l.d=today();closeAll();render();toast('Reply logged for the pastor to check')})},
+  replyok:d=>{S.letters.find(x=>x.id===d.id).replies[+d.i].ok=true;render();toast('Shared with the writer')},
+  norder:d=>{const n=S.needs.find(x=>x.id===d.id);n.ordered=true;n.upd=today();render();toast(`${phys(n)?'Ordered':'In progress'} · ${V(n.from).name||'The volunteer'} sees it on their side`)},
+  ndeliver:d=>{const n=S.needs.find(x=>x.id===d.id);n.supplied=n.asked;n.by=ME[U.role].name;n.upd=today();render();const r=R(n.res);const vn=V(n.from).name||'The volunteer';
+    openModal('',`<div class="loop">${av(r.name,'#3DD68C')}<h3>${esc(r.name.split(' ')[0])} ${phys(n)?'will receive '+esc(({Blanket:'a blanket','Bible or books':'a Bible'})[n.item]||n.item.toLowerCase()):'is not forgotten'}</h3><p>${esc(vn)} sees this on their side, and can tell him at the next visit. A promise made inside, kept.</p>${r.notes[0]?`<p class="said" style="text-align:left;margin-top:1rem;font-family:var(--head)">Last thing he told us: “${esc(r.notes[0].t)}”</p>`:''}</div>`,'Close',closeAll)},
+  resetdemo:()=>openModal('Reset the demo?','<p class="muted">All sample data goes back to how it started.</p>','Reset',()=>{seedN=11;S=buildSeed();closeAll();U.tab='home';render();toast('Demo data reset')}),
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;if(el.tagName==='path'||A[el.dataset.act]){e.preventDefault();A[el.dataset.act]?.(el.dataset,el)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const g=document.getElementById('guide');if(g&&!g.classList.contains('hide'))return guideDone();closeAll()}if(e.key==='Enter'&&e.target.matches('tr.click'))A.person(e.target.dataset)});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.bind&&U.draft)U.draft[t.dataset.bind]=t.value;if(t.dataset.row!==undefined&&t.dataset.f&&U.draft&&t.tagName!=='SELECT')U.draft.rows[+t.dataset.row][t.dataset.f]=t.value});
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='scope'){U.fac=t.value;U.pstage=U.pstage;render();return}
+  if(t.dataset.row!==undefined&&U.draft){const p=U.draft.rows[+t.dataset.row];
+    if(t.dataset.need){const i=p.needs.indexOf(t.dataset.need);t.checked?(i<0&&p.needs.push(t.dataset.need)):(i>=0&&p.needs.splice(i,1));if(t.dataset.need.startsWith('financial|')||t.dataset.need==='supplies|Clothes')render();return}
+    if(t.dataset.f==='who'){p.who=t.value;const r=S.res.find(x=>x.id===t.value);if(r){p.stage=r.stage;p.follow=r.follow}render();return}
+    p[t.dataset.f]=t.dataset.f==='stage'?+t.value:t.value;return}
+  if(t.dataset.actChk==='wact'){const a=U.draft.acts,i=a.indexOf(t.value);t.checked?(i<0&&a.push(t.value)):(i>=0&&a.splice(i,1));return}
+  if(t.dataset.actChk==='printed'||t.dataset.actChk==='sent'){const l=S.letters.find(x=>x.id===t.dataset.id);l[t.dataset.actChk]=t.checked;if(l.printed&&l.sent){l.stage=3;toast('Printed and sent · moved on')}render();return}
+  if(t.dataset.actChange==='assign'&&t.value){const l=S.letters.find(x=>x.id===t.dataset.id);l.reviewer=t.value;l.stage=1;l.returned=null;render();toast(`Assigned to ${T(t.value).name}`);return}
+  if(t.dataset.actChange==='dstage'){const rr=R(t.dataset.id);(rr.hist=rr.hist||[]).push({d:today(),stage:+t.value});rr.stage=+t.value;personDrawer(t.dataset.id);render();toast('Stage updated');return}
+});
+</script>
+</body>
+</html>
